@@ -1,0 +1,31 @@
+{
+  "name": "product-design-ceo-orchestrator",
+  "displayName": "Product Design CEO Orchestrator",
+  "description": "A product-design orchestration skill for PRDs, feature design, strategy, research, product reviews, UI demo planning, and execution-ready artifacts.",
+  "version": "0.1.0",
+  "author": "Kai Zhang",
+  "license": "MIT",
+  "repository": "https://github.com/burpeepoo/product-design-ceo-orchestrator",
+  "entry": "SKILL.md",
+  "keywords": [
+    "product-design",
+    "product-management",
+    "prd",
+    "requirements",
+    "strategy",
+    "user-research",
+    "market-research",
+    "competitor-analysis",
+    "ui-demo",
+    "prototype",
+    "agent-skill"
+  ],
+  "platforms": [
+    "codex",
+    "claude",
+    "cursor",
+    "windsurf",
+    "gemini",
+    "opencode"
+  ]
+}
