@@ -116,6 +116,25 @@ Use sequential execution when:
 
 CEO / Manager orchestration, cross-role review, adjudication, validation, and final integration stay with the main agent.
 
+## Handoff Contract
+
+Before role or subagent execution, create a handoff block with:
+
+- task id
+- handoff id
+- parent goal
+- assignee type: role or subagent
+- role and task
+- context, input sources, constraints, and dependencies
+- expected output and evidence requirement
+- artifact format and output path
+- status and exit condition
+- return contract
+
+Use task id to track the role task or subtask, and handoff id to track the delegation record. They may match for simple sequential work, but complex or retried delegation should keep them distinct.
+
+The return contract must require summary, decisions, evidence used, artifacts created, risks, open questions, and next actions. Do not delegate durable work without this return shape.
+
 ## Role Skill Routing
 
 For medium and complex work, each role task records portable skill-routing decisions before execution:
@@ -158,6 +177,15 @@ Use cross-role collaboration when selected roles affect the same product decisio
 - CEO / Manager must adjudicate accepted, rejected, and deferred suggestions before final synthesis.
 - Final artifacts must reflect accepted changes or state why they were not applied.
 
+## Status Exit Conditions
+
+Durable work cannot be marked complete while collaboration status is unclear.
+
+- `blocked`: close only when the blocker is resolved, accepted as a risk, or moved out of scope with rationale.
+- `in_review`: close only when the reviewer approves, requests changes, or review is waived with rationale.
+- `needs_follow_up`: close only when owner, trigger, next action, affected artifact or decision, and required/optional status are recorded.
+- Final integration must include the disposition of blocked, review, and follow-up items.
+
 ## Required CEO Decisions
 
 Before executing, produce:
@@ -172,6 +200,8 @@ Before executing, produce:
 - output artifacts
 - artifact format decisions
 - role skill-routing decisions
+- role or subagent handoff blocks
+- blocked, review, and follow-up exit conditions
 - success criteria
 - evidence needed
 - review plan
@@ -186,5 +216,7 @@ Keep the first response proportional to the task:
 - Simple: one sentence explaining direct handling, then answer.
 - Medium: one short paragraph naming roles, KB status, skill-routing approach, review depth, artifact format, and expected artifact path.
 - Complex: a concise plan with roles, phases, workspace mode, KB status, skill-routing approach, review depth, artifact formats, and final integration criteria.
+
+Write the first response and all user-facing artifact content in the user's current language unless the user asks for another language.
 
 Do not turn the first response into a full final artifact unless the request is simple.

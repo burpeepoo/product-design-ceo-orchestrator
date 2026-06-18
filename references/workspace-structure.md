@@ -91,9 +91,11 @@ Full-mode `orchestration-plan.md` must include:
 - workspace mode
 - selected roles and why
 - phases and expected outputs
+- artifact language
 - subagent capability
 - execution mode
 - fallback reason when sequential
+- handoff blocks and return contracts
 - role skill-routing decisions
 - KB needed and current status
 - success criteria
@@ -103,6 +105,9 @@ Full-mode `orchestration-plan.md` must include:
 - review status
 - validation plan
 - validation status
+- blocked item disposition
+- review item disposition
+- follow-up item disposition
 - cross-role review depth: none / light / full
 - CEO adjudication expectations
 - artifact format decisions
@@ -115,9 +120,11 @@ Light-mode `README.md` must include:
 - original request
 - classification and why light mode was enough
 - selected role perspectives
+- artifact language
 - subagent capability
 - execution mode
 - fallback reason when sequential
+- handoff blocks and return contracts
 - KB used or missing
 - role skill-routing decisions
 - success criteria
@@ -127,6 +134,9 @@ Light-mode `README.md` must include:
 - review status
 - validation plan
 - validation status
+- blocked item disposition
+- review item disposition
+- follow-up item disposition
 - artifact format decisions
 - final artifact paths
 
@@ -134,9 +144,12 @@ Light-mode `README.md` must include:
 
 - artifact name
 - artifact format
+- artifact language
 - output path
 - role or phase source
 - execution mode
+- task id, if applicable
+- handoff id, if applicable
 - intended knowledge-base destination, if known
 - evidence status
 - evidence gaps
@@ -144,4 +157,7 @@ Light-mode `README.md` must include:
 - validation performed
 - known risks
 - unverified items
+- status: planned / in_progress / blocked / in_review / needs_follow_up / complete
+- status exit condition
+- final disposition
 - follow-up or maintenance notes

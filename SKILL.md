@@ -15,6 +15,21 @@ Act as the smallest useful product leadership system before acting as an individ
 4. If durable, plan roles, phases, KB needs, workspace mode, delivery discipline gates, skill routing, collaboration review, and final knowledge artifact before executing.
 5. If the runtime supports subagent orchestration and role tasks are independent, assign those role tasks to subagents. If subagents are unavailable, blocked, unsafe, or tasks are dependent, execute sequentially and record the fallback reason.
 
+## Output Language Contract
+
+The user's current language controls all user-facing output unless the user asks for another language.
+
+This applies to:
+- chat responses
+- first response templates
+- saved Markdown or document artifacts
+- workspace `README.md`, `artifact-index.md`, `orchestration-plan.md`, role outputs, review notes, decision logs, and final artifacts
+- headings, narrative, recommendations, risks, follow-ups, and validation summaries
+
+English schema keys such as `role`, `task`, `artifact_format`, or `validation_performed` may remain in English for portability, but their values and surrounding explanations must use the user's language.
+
+Do not let English templates, English role names, source document language, or local skill wording override the user's requested language.
+
 ## Quick Decision Table
 
 | Request shape | Classification | Workspace | Roles | First action | Final output |
@@ -30,6 +45,8 @@ Always create a final integration phase for complex tasks so outputs do not rema
 ## First Response Templates
 
 Use the lightest template that fits.
+
+Translate these templates into the user's current language before sending them.
 
 Simple:
 
@@ -136,6 +153,48 @@ Use sequential execution when any are true:
 
 Do not split final CEO integration, validation, or adjudication away from the main agent.
 
+## Role / Subagent Handoff Schema
+
+Before assigning work to a role or subagent, create a handoff block. Use it for both parallel subagent dispatch and sequential role execution when the task is durable.
+
+```text
+task_id:
+handoff_id:
+parent_goal:
+assignee_type: role | subagent
+role:
+task:
+context:
+input_sources:
+constraints:
+dependencies:
+expected_output:
+evidence_requirement:
+artifact_format:
+output_path:
+status: planned | in_progress | blocked | in_review | needs_follow_up | complete
+exit_condition:
+return_contract:
+```
+
+The `return_contract` must require:
+
+```text
+summary:
+decisions:
+evidence_used:
+artifacts_created:
+risks:
+open_questions:
+next_actions:
+```
+
+Do not delegate with only a role name or broad instruction. Each handoff must be specific enough that another agent can complete it and the CEO / Manager can verify and integrate it.
+
+Use `task_id` to track the role task or subtask, and `handoff_id` to track the delegation record. They may match for simple sequential work, but complex or retried delegation should keep them distinct.
+
+Returned role or subagent outputs must come back to CEO / Manager integration. Handoff notes are not a final answer.
+
 ## Cross-Role Collaboration Loop
 
 After first-pass role outputs for medium or complex tasks, run the smallest useful collaboration review before final synthesis.
@@ -169,6 +228,60 @@ final_artifact_updates:
 ```
 
 The final artifact must reflect the adjudication. Do not paste role outputs together without deciding what changes.
+
+## Collaboration Status Exit Conditions
+
+Durable work must not be marked complete while collaboration state is ambiguous.
+
+Use these statuses for role tasks, handoffs, review items, and follow-ups:
+
+| Status | Meaning | Required exit condition |
+|---|---|---|
+| `planned` | Work is defined but not started | Owner and start trigger are clear |
+| `in_progress` | Work is actively being produced | Output path or return contract is still pending |
+| `blocked` | Work cannot continue without input, evidence, access, or decision | Blocker is resolved, accepted as a risk, or moved out of scope with rationale |
+| `in_review` | Output exists and needs review or decision | Reviewer approves, requests changes, or review is waived with rationale |
+| `needs_follow_up` | Non-blocking work remains after the main artifact | Owner, trigger, next action, affected artifact or decision, and required/optional status are recorded |
+| `complete` | Work is integrated or explicitly closed | Evidence, review disposition, risks, and next actions are recorded |
+
+Blocked item record:
+
+```text
+owner:
+blocker:
+missing_input_or_decision:
+evidence_checked:
+unblock_request:
+fallback_option:
+exit_condition:
+final_disposition:
+```
+
+Review item record:
+
+```text
+reviewer:
+review_scope:
+requested_decision:
+due_or_trigger:
+release_blocking: yes | no
+exit_condition:
+final_disposition:
+```
+
+Follow-up item record:
+
+```text
+owner:
+trigger:
+next_action:
+affected_artifact_or_decision:
+required_or_optional:
+exit_condition:
+final_disposition:
+```
+
+Before final integration, every blocked, review, or follow-up item must be either resolved, explicitly accepted as a risk, moved out of scope with rationale, or recorded as a non-blocking follow-up with owner and trigger.
 
 ## Over-Orchestration Red Flags
 
@@ -204,7 +317,7 @@ Likely future split candidates are competitor research, UI demo orchestration, P
    - missing inputs, if any
 3. Choose workspace mode from `references/workspace-structure.md`: none / light / full.
 4. Choose roles from `references/role-catalog.md`; create role boundary files only for selected roles in full workspace mode.
-5. For medium work, keep the orchestration plan, delivery gates, execution mode, role skill-routing decisions, review decisions, and artifact path in the response or light-mode `artifact-index.md`. For complex work, create `orchestration-plan.md` with phases, tasks, dependencies, subagent capability, execution mode, role skill-routing decisions, delivery gates, collaboration review plan, artifact formats, expected outputs, and final synthesis criteria.
+5. For medium work, keep the orchestration plan, delivery gates, execution mode, role handoffs, role skill-routing decisions, review decisions, status exit conditions, and artifact path in the response or light-mode `artifact-index.md`. For complex work, create `orchestration-plan.md` with phases, tasks, dependencies, subagent capability, execution mode, role handoffs, role skill-routing decisions, delivery gates, collaboration review plan, status exit conditions, artifact formats, expected outputs, and final synthesis criteria.
 6. Execute in order: understand -> define -> first-pass role outputs -> cross-role review when useful -> CEO adjudication -> design or write revision -> validation -> final integration.
 7. Save durable final output to the selected output path and record it in the artifact index. In full workspace mode, put final artifacts under `outputs/` and choose the best format for each artifact.
 8. Update `reflections.md` only for durable tasks where reusable lessons or follow-ups emerged.
@@ -223,11 +336,14 @@ Likely future split candidates are competitor research, UI demo orchestration, P
 Every durable task must end with:
 
 - orchestration decision
+- artifact language and any requested translation choice
 - roles and phases used
 - subagent capability, execution mode, and fallback reason when sequential execution is used
+- role or subagent handoff blocks and return contracts
 - success criteria, evidence needed, review plan, and validation plan for medium/complex work
 - role skill-routing decisions
 - cross-role review and CEO adjudication when multiple role perspectives materially interact
+- status disposition for blocked, review, and follow-up items
 - KB used or requested
 - final artifact summary
 - artifact format and why it was chosen
@@ -240,15 +356,18 @@ Every durable task must end with:
 Before claiming a durable task is complete, verify:
 
 - User goal is restated and the final artifact answers it.
+- User-facing responses and saved artifacts use the user's current language unless another language was requested.
 - Classification, workspace mode, selected roles, and phases are recorded.
 - Subagent capability and execution mode are recorded for medium/complex work.
 - Independent role tasks used subagents when supported; otherwise the fallback reason is explicit.
+- Role or subagent work has structured handoff blocks and return contracts before delegation.
 - Medium/complex work records success criteria, evidence needs, review plan, and validation plan.
 - Role tasks record skill triggers, decisions, evidence requirements, artifact format, and output paths.
 - Facts, assumptions, recommendations, and evidence gaps are separated.
 - Current market or competitor claims are backed by browsing or user-provided sources.
 - Cross-role review happened when selected roles materially affected each other, or the reason for skipping it is explicit.
 - CEO / Manager adjudicated accepted, rejected, and deferred role suggestions before final integration.
+- Blocked, in-review, and follow-up items have owners, exit conditions, and final dispositions.
 - Final artifact reflects the adjudication instead of leaving role feedback as loose notes.
 - The final integration resolves conflicts between role outputs instead of pasting them together.
 - Medium/complex work has a knowledge-base-ready artifact unless the user explicitly asked not to create one.

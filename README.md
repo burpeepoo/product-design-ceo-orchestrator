@@ -8,11 +8,14 @@ The skill helps an agent decide when to answer directly, when to use a few produ
 
 - correct scope before execution
 - correctness, evidence, and long-term maintainability over fastest possible output
+- user-facing artifacts that follow the user's current language
 - the lightest useful workflow
 - explicit role selection
 - subagent orchestration when the runtime supports it and role tasks are independent
+- structured handoff contracts for role and subagent work
 - portable role-level skill routing
 - delivery discipline gates before claiming durable work is complete
+- explicit blocked, review, and follow-up exit conditions
 - cross-role collaboration and CEO adjudication when roles disagree
 - evidence-aware product recommendations
 - knowledge-base-ready artifacts instead of scattered notes
@@ -198,6 +201,18 @@ For medium and complex tasks, the skill records whether the runtime supports sub
 
 If subagents are unavailable, blocked, unsafe, or the tasks are dependent, the skill falls back to sequential execution and records the reason. CEO / Manager orchestration, cross-role review, adjudication, validation, and final integration stay with the main agent.
 
+## Handoff And Status Closure
+
+Role and subagent work uses structured handoff blocks: task id, handoff id, parent goal, role, task, context, sources, constraints, dependencies, expected output, evidence requirement, artifact format, output path, status, exit condition, and return contract.
+
+Blocked, review, and follow-up items must have owners, exit conditions, and final dispositions. Durable work should not be marked complete while a blocking status is unresolved or while review/follow-up ownership is unclear.
+
+## Output Language
+
+The skill writes chat responses and user-facing saved artifacts in the user's current language unless another language is requested. This includes Markdown files, workspace indexes, orchestration plans, role outputs, reviews, decision logs, and final artifacts.
+
+Portable schema keys may remain in English, but headings, narrative, recommendations, risks, and follow-ups should follow the user's language.
+
 ## Delivery Discipline
 
 Medium and complex tasks define success criteria, evidence needs, review plan, and validation plan before execution. Before claiming durable work is complete, the final output records validation performed, evidence collected, known risks, and unverified items.
@@ -225,8 +240,11 @@ Simple tasks stay lightweight unless the user asks for a saved artifact.
 The skill includes pressure scenarios in `tests/pressure-scenarios.md`. Use them when changing the skill to verify it still:
 
 - avoids over-orchestration
+- keeps saved artifacts in the user's language
 - uses role perspectives only when they add distinct value
 - uses subagents for independent role tasks when supported, with sequential fallback when unsupported
+- uses structured handoff contracts for role and subagent tasks
+- closes blocked, review, and follow-up states before claiming durable work is complete
 - routes role tasks to portable skill triggers when useful
 - applies delivery discipline gates for durable medium/complex work
 - uses cross-role collaboration and CEO adjudication when role perspectives interact
@@ -249,7 +267,7 @@ test -s references/role-catalog.md
 test -s references/workspace-structure.md
 test -s references/kb-policy.md
 test -s tests/pressure-scenarios.md
-rg -n "description: Use when|Subagent Execution Mode|Delivery Discipline Gates|Cross-Role Collaboration Loop|Role Selection Matrix|Workspace Modes|Pressure Scenarios" .
+rg -n "description: Use when|Output Language Contract|Subagent Execution Mode|Delivery Discipline Gates|Cross-Role Collaboration Loop|Role Selection Matrix|Workspace Modes|Pressure Scenarios" .
 ```
 
 ## Publishing Workflow
@@ -268,8 +286,11 @@ For npm releases:
 ```bash
 npm test
 npm pack --dry-run
-npm publish
+npm login --auth-type=web
+npm publish --auth-type=web
 ```
+
+Use the web/passkey flow for npm publishing. Complete the browser prompt with the account passkey or security key; do not ask another agent to handle the secret factor. If publishing returns `EOTP` because the local CLI session is still using an older token, refresh the session with `npm login --auth-type=web` and retry `npm publish --auth-type=web`.
 
 For larger behavior changes, update `tests/pressure-scenarios.md` first so the expected behavior is explicit before editing the skill.
 

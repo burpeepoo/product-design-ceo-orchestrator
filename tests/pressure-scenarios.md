@@ -14,6 +14,9 @@ An agent using this skill should:
 - route each role task to portable skill triggers when useful
 - use multiple subagents for independent role tasks when the runtime supports subagent orchestration
 - fall back to sequential execution when subagents are unavailable, blocked, or unsafe
+- create structured handoff blocks for role or subagent tasks before delegation
+- close blocked, review, and follow-up statuses with explicit exit conditions before final completion
+- write user-facing responses, saved artifacts, Markdown files, role outputs, plans, and indexes in the user's current language unless the user requests another language
 - define success criteria, evidence needs, review plan, and validation plan before durable work
 - use cross-role review when selected role perspectives can improve or challenge each other
 - show CEO adjudication for accepted, rejected, or deferred role suggestions
@@ -375,12 +378,73 @@ Expected behavior:
 Failure this prevents:
 - Leaving supported subagent orchestration unused, or pretending subagents exist when the runtime cannot run them safely.
 
+## Scenario 19: Artifact Language Follows The Conversation
+
+User request:
+
+> 帮我写一个中文 PRD，输出到 md 文档里。
+
+Pressures:
+- The skill body and first response templates are written in English.
+- The durable artifact is Markdown, which may inherit English section labels.
+- Role task blocks use English field names.
+
+Expected behavior:
+- Respond in Chinese.
+- Write the saved Markdown artifact's headings, narrative, recommendations, risks, and follow-ups in Chinese.
+- Keep only portable schema field keys in English when useful, but write field values and user-facing explanations in Chinese.
+- Do not let English templates, role names, or source material language override the user's requested language.
+
+Failure this prevents:
+- Producing an English Markdown artifact for a Chinese conversation.
+
+## Scenario 20: Subagent Handoff Needs A Return Contract
+
+User request:
+
+> 做一个复杂的竞品 + UX + 技术可行性分析，如果可以就让多个子 agent 分头做。
+
+Pressures:
+- The task naturally splits across Market Analyst, Product Designer, and Tech Lead.
+- The agent may dispatch subagents with only a vague role name.
+- Returned outputs may be hard to integrate if expected evidence and return shape are missing.
+
+Expected behavior:
+- Create a structured handoff block for each delegated role or subagent task before dispatch.
+- Include task id, parent goal, role, context, input sources, constraints, dependencies, expected output, evidence requirement, artifact format, output path, status, exit condition, and return contract.
+- Require returned outputs to include summary, decisions, evidence used, artifacts, risks, open questions, and next actions.
+- CEO / Manager integrates returned outputs rather than leaving handoff notes as the final answer.
+
+Failure this prevents:
+- Subagents producing useful-looking but incompatible notes that cannot be reviewed or integrated.
+
+## Scenario 21: Blocked Review Follow-Up Status Must Close Before Done
+
+User request:
+
+> 先把产品优化方案写出来，细节问题可以后面再说，今天先当完成。
+
+Pressures:
+- The user wants completion despite unresolved questions.
+- Some role feedback may still be in review or follow-up.
+- The artifact can look complete while collaboration state is unclear.
+
+Expected behavior:
+- If a blocker exists, record blocker owner, missing input or decision, evidence already checked, unblock request, fallback option, and exit condition.
+- If review is pending, record reviewer, review scope, requested decision, due condition, and whether the final artifact can be released without it.
+- If follow-up remains, record owner, trigger, next action, artifact or decision affected, and whether it is required or optional.
+- Do not mark the durable task complete unless all blocking statuses are resolved, explicitly accepted as risks, or moved out of scope with rationale.
+
+Failure this prevents:
+- Declaring the artifact done while blocked, review, or follow-up work is still ambiguous.
+
 ## Manual Verification Checklist
 
 Before deploying edits to this skill, confirm:
 
 - `SKILL.md` description starts with "Use when" and only describes triggers.
 - `SKILL.md` includes first response templates and over-orchestration red flags.
+- `SKILL.md` requires user-facing artifacts and saved files to follow the user's current language.
 - `SKILL.md` includes delivery discipline gates without replacing the CEO orchestrator workflow.
 - `SKILL.md` includes cross-role collaboration and CEO adjudication for medium/complex work.
 - `references/orchestration-model.md` includes a decision table and downgrade rule.
@@ -390,8 +454,11 @@ Before deploying edits to this skill, confirm:
 - `references/workspace-structure.md` allows evidence, review, validation, cross-role review, and decision-log artifacts without forcing Markdown.
 - `references/delivery-discipline.md` defines entry, evidence, review, and completion gates.
 - Medium and complex tasks default to knowledge-base-ready artifacts without forcing Markdown.
+- Durable artifacts preserve the user's language unless another language is explicitly requested.
 - Role tasks include portable skill trigger routing and visible skill decisions.
 - Independent role tasks use subagents when supported and fall back to sequential execution when not supported.
+- Role or subagent delegation includes a structured handoff block and return contract.
+- Blocked, review, and follow-up statuses have explicit owners, exit conditions, and final disposition.
 - Cross-role suggestions, concerns, questions, and conflicts return to CEO adjudication.
 - Durable task completion is checked by the final validation checklist.
 - These pressure scenarios still map to explicit instructions in the skill.
