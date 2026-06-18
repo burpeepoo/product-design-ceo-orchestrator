@@ -71,10 +71,11 @@ Default phases:
 1. Understand problem: user, scenario, market, competitor, constraints.
 2. Define product: goals, scope, requirements, acceptance criteria.
 3. First-pass role outputs: role-specific findings and proposals.
-4. Cross-role review: suggestions, concerns, questions, and conflicts.
-5. CEO adjudication: accepted, rejected, and deferred role feedback.
-6. Final artifact revision: IA, flow, UI, prototype, PRD, demo, or artifact.
-7. Validation and final integration: one CEO-readable final result and paths.
+4. Review relevance gate: decide whether cross-role review is none, targeted, or full based on shared decision nodes.
+5. Cross-role review: decision-driven suggestions, concerns, questions, and conflicts.
+6. CEO adjudication: accepted, rejected, and deferred role feedback.
+7. Final artifact revision: IA, flow, UI, prototype, PRD, demo, or artifact.
+8. Validation and final integration: one CEO-readable final result and paths.
 
 ## Split Rules
 
@@ -170,10 +171,47 @@ Simple tasks do not need formal gates, but unsupported claims must still be mark
 
 ## Cross-Role Collaboration
 
-Use cross-role collaboration when selected roles affect the same product decision.
+Use cross-role collaboration when selected roles affect the same product decision. Keep it decision-driven: the review target is a decision node, not the fact that multiple roles exist.
 
-- Medium: one light review block for material suggestions, concerns, questions, and conflicts.
-- Complex: formal review artifact or review phase output.
+Before review, extract from each first-pass role output:
+
+- decisions
+- assumptions
+- dependencies
+- risks
+- evidence gaps
+- review needed from
+
+Then record:
+
+```text
+cross_role_review_decision:
+  mode: none | targeted | full
+  reason:
+  decision_nodes:
+```
+
+Use `none` when roles do not materially affect the same decision, when review would produce only generic comments, or when no final artifact section would change.
+
+Use `targeted` when 1-3 decision nodes need challenge from specific roles.
+
+Use `full` only when several decision nodes interact or the review is itself a durable artifact.
+
+Each review item should name:
+
+- target decision
+- reviewer role
+- challenge type
+- concern
+- suggested change
+- evidence or reason
+- impact if ignored
+- whether CEO adjudication is required
+
+Review depth:
+
+- Medium: default to `none` or `targeted`; one light review block for material decision nodes only.
+- Complex: run the relevance gate first, then create a formal review artifact or review phase output only for `targeted` or `full`.
 - CEO / Manager must adjudicate accepted, rejected, and deferred suggestions before final synthesis.
 - Final artifacts must reflect accepted changes or state why they were not applied.
 
@@ -206,7 +244,8 @@ Before executing, produce:
 - evidence needed
 - review plan
 - validation plan
-- cross-role collaboration depth: none / light / full
+- cross-role review decision: none / targeted / full
+- decision nodes that justify review, if any
 - assumptions and open questions
 
 ## First Response Shape

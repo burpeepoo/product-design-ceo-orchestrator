@@ -103,12 +103,14 @@ Full-mode `orchestration-plan.md` must include:
 - evidence status
 - review plan
 - review status
+- cross-role review decision: none / targeted / full
+- decision nodes that justify review, if any
 - validation plan
 - validation status
 - blocked item disposition
 - review item disposition
 - follow-up item disposition
-- cross-role review depth: none / light / full
+- review relevance reason
 - CEO adjudication expectations
 - artifact format decisions
 - execution order
@@ -132,6 +134,8 @@ Light-mode `README.md` must include:
 - evidence status
 - review plan
 - review status
+- cross-role review decision: none / targeted / full
+- decision nodes that justify review, if any
 - validation plan
 - validation status
 - blocked item disposition

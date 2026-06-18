@@ -16,7 +16,7 @@ The skill helps an agent decide when to answer directly, when to use a few produ
 - portable role-level skill routing
 - delivery discipline gates before claiming durable work is complete
 - explicit blocked, review, and follow-up exit conditions
-- cross-role collaboration and CEO adjudication when roles disagree
+- decision-driven cross-role collaboration and CEO adjudication when roles disagree on material decisions
 - evidence-aware product recommendations
 - knowledge-base-ready artifacts instead of scattered notes
 - artifact formats chosen for the work instead of forced Markdown
@@ -221,7 +221,7 @@ This skill optimizes for correctness, evidence, and maintainability. It does not
 
 ## Cross-Role Collaboration
 
-When selected roles materially affect the same product decision, their first-pass outputs go through a cross-role review. Roles record suggestions, concerns, questions, and conflicts; CEO / Manager then adjudicates accepted, rejected, and deferred feedback before the final artifact is revised.
+When selected roles materially affect the same product decision, their first-pass outputs pass through a Review Relevance Gate. The gate records `none`, `targeted`, or `full` review based on concrete decision nodes. Roles review only the decisions they can materially challenge; CEO / Manager then adjudicates accepted, rejected, and deferred feedback before the final artifact is revised.
 
 ## Knowledge Artifacts
 
@@ -245,6 +245,7 @@ The skill includes pressure scenarios in `tests/pressure-scenarios.md`. Use them
 - uses subagents for independent role tasks when supported, with sequential fallback when unsupported
 - uses structured handoff contracts for role and subagent tasks
 - closes blocked, review, and follow-up states before claiming durable work is complete
+- drives cross-role review from concrete decision nodes instead of role count alone
 - routes role tasks to portable skill triggers when useful
 - applies delivery discipline gates for durable medium/complex work
 - uses cross-role collaboration and CEO adjudication when role perspectives interact
@@ -267,7 +268,7 @@ test -s references/role-catalog.md
 test -s references/workspace-structure.md
 test -s references/kb-policy.md
 test -s tests/pressure-scenarios.md
-rg -n "description: Use when|Output Language Contract|Subagent Execution Mode|Delivery Discipline Gates|Cross-Role Collaboration Loop|Role Selection Matrix|Workspace Modes|Pressure Scenarios" .
+rg -n "description: Use when|Output Language Contract|Subagent Execution Mode|Delivery Discipline Gates|Review Relevance Gate|Cross-Role Collaboration Loop|Role Selection Matrix|Workspace Modes|Pressure Scenarios" .
 ```
 
 ## Publishing Workflow

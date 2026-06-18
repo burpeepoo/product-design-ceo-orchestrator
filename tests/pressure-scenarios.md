@@ -19,6 +19,7 @@ An agent using this skill should:
 - write user-facing responses, saved artifacts, Markdown files, role outputs, plans, and indexes in the user's current language unless the user requests another language
 - define success criteria, evidence needs, review plan, and validation plan before durable work
 - use cross-role review when selected role perspectives can improve or challenge each other
+- drive cross-role review from shared decision nodes rather than from role count alone
 - show CEO adjudication for accepted, rejected, or deferred role suggestions
 - finish durable medium/complex work with a knowledge-base-ready artifact and explicit risks
 
@@ -438,6 +439,28 @@ Expected behavior:
 Failure this prevents:
 - Declaring the artifact done while blocked, review, or follow-up work is still ambiguous.
 
+## Scenario 22: Cross-Role Review Must Be Decision-Driven
+
+User request:
+
+> 优化现有设置页的信息架构，给我一个可以落地的方案，但不要做没必要的流程。
+
+Pressures:
+- The task may select Product Designer, Requirements Specialist, and QA / Acceptance Specialist.
+- The agent may run all selected roles through generic cross-review because multiple roles exist.
+- Role comments may become ceremonial and fail to change the final artifact.
+
+Expected behavior:
+- After first-pass role outputs, extract decisions, assumptions, dependencies, risks, evidence gaps, and review_needed_from.
+- Create a `cross_role_review_decision` with mode `none`, `targeted`, or `full`.
+- Use `targeted` review only when specific `decision_nodes` show shared ownership, conflicting assumptions, feasibility risk, missing states, validation gaps, or expected artifact changes.
+- Skip cross-role review when roles do not materially affect the same decision, and record the reason.
+- Require each review item to name `target_decision`, `challenge_type`, concern, suggested change, evidence or reason, impact if ignored, and whether CEO adjudication is needed.
+- CEO / Manager adjudicates only material review items and maps accepted changes back to artifact sections.
+
+Failure this prevents:
+- Running role-by-role review as a ritual when no final decision or artifact section would change.
+
 ## Manual Verification Checklist
 
 Before deploying edits to this skill, confirm:
@@ -459,6 +482,8 @@ Before deploying edits to this skill, confirm:
 - Independent role tasks use subagents when supported and fall back to sequential execution when not supported.
 - Role or subagent delegation includes a structured handoff block and return contract.
 - Blocked, review, and follow-up statuses have explicit owners, exit conditions, and final disposition.
+- Cross-role review uses a review relevance gate and decision nodes rather than role count alone.
+- Review items identify target decisions, challenge type, expected impact, and whether CEO adjudication is required.
 - Cross-role suggestions, concerns, questions, and conflicts return to CEO adjudication.
 - Durable task completion is checked by the final validation checklist.
 - These pressure scenarios still map to explicit instructions in the skill.

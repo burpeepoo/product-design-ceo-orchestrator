@@ -23,7 +23,7 @@ Role selection rules:
 - Do not create a role file for a role that only contributes generic commentary.
 - If a role depends on missing evidence, record the gap instead of inventing the role's findings.
 - Before each role executes, record portable skill trigger categories and a skill decision.
-- After first-pass outputs, selected roles should challenge each other only where their boundaries materially overlap.
+- After first-pass outputs, selected roles should challenge each other only where their boundaries materially overlap on the same decision node.
 - Role outputs must return to CEO / Manager final integration; separated role notes are not a final answer.
 
 ## Portable Skill Trigger Categories
@@ -42,7 +42,7 @@ Use these trigger categories for role-level skill selection. They are search cue
 
 ## Collaboration Boundaries
 
-Use these as review cues after first-pass role outputs. They are not reasons to add a role by themselves.
+Use these as review cues after the Review Relevance Gate identifies a shared decision node. They are not reasons to add a role or run review by themselves.
 
 | Reviewer | Challenges | Focus |
 |---|---|---|
@@ -57,12 +57,14 @@ Use these as review cues after first-pass role outputs. They are not reasons to 
 Cross-role review block:
 
 ```text
+target_decision:
 reviewer_role:
-reviews:
-suggestions:
-concerns:
-questions:
-conflicts:
+challenge_type: risk | missing_state | feasibility | evidence_gap | metric_gap | usability_gap | scope_gap
+concern:
+suggested_change:
+evidence_or_reason:
+impact_if_ignored:
+requires_ceo_adjudication: yes | no
 ```
 
 CEO adjudication block:

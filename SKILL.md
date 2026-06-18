@@ -94,8 +94,9 @@ Evidence gate:
 - If evidence is missing, record the gap instead of inventing certainty.
 
 Review gate:
-- Medium tasks use a light review by the selected role perspectives.
-- Complex tasks use a full cross-role collaboration loop before final integration.
+- Use the Review Relevance Gate before cross-role review.
+- Medium tasks default to `none` or `targeted` review unless decision nodes show real overlap.
+- Complex tasks must pass through the gate, but the gate may record `none` when there is no material cross-role decision.
 
 Completion gate:
 
@@ -197,24 +198,76 @@ Returned role or subagent outputs must come back to CEO / Manager integration. H
 
 ## Cross-Role Collaboration Loop
 
-After first-pass role outputs for medium or complex tasks, run the smallest useful collaboration review before final synthesis.
+After first-pass role outputs for medium or complex tasks, run cross-role review only when it is decision-driven. The unit of review is a product decision, not a role pair.
 
-Medium:
-- Use one concise cross-role review block only for material disagreements or missing checks.
-- Skip formal review artifacts when the selected roles do not overlap or the user explicitly asked for a quick answer.
+### Review Relevance Gate
 
-Complex:
-- Create a cross-role review artifact or phase output.
-- Each relevant reviewer records:
+Before cross-role review, each selected role output should expose:
 
 ```text
-reviewer_role:
-reviews:
-suggestions:
-concerns:
-questions:
-conflicts:
+decisions:
+assumptions:
+dependencies:
+risks:
+evidence_gaps:
+review_needed_from:
 ```
+
+CEO / Manager then records:
+
+```text
+cross_role_review_decision:
+  mode: none | targeted | full
+  reason:
+  decision_nodes:
+```
+
+Trigger cross-role review only when at least one decision node has material overlap:
+- Two or more roles affect the same product decision.
+- One role's proposal increases another role's feasibility, validation, scope, metric, or usability risk.
+- Role assumptions conflict.
+- An evidence gap could change the final recommendation.
+- A proposed change affects implementation cost, acceptance boundaries, data measurement, release risk, or user comprehension.
+- The output will be implemented, reviewed, or released and the role challenge could change the artifact.
+
+Skip cross-role review and record `mode: none` when:
+- Role outputs do not materially affect the same decision.
+- A role only adds background context and does not change the final artifact.
+- The review would only produce generic comments.
+- No final artifact section, decision, risk, or follow-up would change.
+- The user explicitly asked for speed and the risk is low.
+
+Use `targeted` when 1-3 concrete decision nodes need challenge. Use `full` only when several decisions interact or the task is complex enough that review itself is a durable artifact.
+
+Medium:
+- Default to `none` or `targeted`.
+- Use one concise review block only for material decision nodes.
+- Skip formal review artifacts when the gate records `none`.
+
+Complex:
+- Run the Review Relevance Gate before creating review work.
+- Create a cross-role review artifact or phase output only for `targeted` or `full`.
+- Each relevant reviewer records review items tied to decision nodes:
+
+```text
+target_decision:
+reviewer_role:
+challenge_type: risk | missing_state | feasibility | evidence_gap | metric_gap | usability_gap | scope_gap
+concern:
+suggested_change:
+evidence_or_reason:
+impact_if_ignored:
+requires_ceo_adjudication: yes | no
+```
+
+If a selected reviewer has no material challenge, record:
+
+```text
+no_material_challenge:
+reason:
+```
+
+Do not run all-role review merely because multiple roles were selected.
 
 ### CEO Adjudication
 
@@ -227,7 +280,7 @@ deferred_questions:
 final_artifact_updates:
 ```
 
-The final artifact must reflect the adjudication. Do not paste role outputs together without deciding what changes.
+Each accepted change must name the artifact section updated. Each rejected or deferred item must name the reason and the risk if the decision is wrong. The final artifact must reflect the adjudication. Do not paste role outputs together without deciding what changes.
 
 ## Collaboration Status Exit Conditions
 
@@ -317,7 +370,7 @@ Likely future split candidates are competitor research, UI demo orchestration, P
    - missing inputs, if any
 3. Choose workspace mode from `references/workspace-structure.md`: none / light / full.
 4. Choose roles from `references/role-catalog.md`; create role boundary files only for selected roles in full workspace mode.
-5. For medium work, keep the orchestration plan, delivery gates, execution mode, role handoffs, role skill-routing decisions, review decisions, status exit conditions, and artifact path in the response or light-mode `artifact-index.md`. For complex work, create `orchestration-plan.md` with phases, tasks, dependencies, subagent capability, execution mode, role handoffs, role skill-routing decisions, delivery gates, collaboration review plan, status exit conditions, artifact formats, expected outputs, and final synthesis criteria.
+5. For medium work, keep the orchestration plan, delivery gates, execution mode, role handoffs, role skill-routing decisions, review relevance decision, status exit conditions, and artifact path in the response or light-mode `artifact-index.md`. For complex work, create `orchestration-plan.md` with phases, tasks, dependencies, subagent capability, execution mode, role handoffs, role skill-routing decisions, delivery gates, review relevance gate, decision nodes, status exit conditions, artifact formats, expected outputs, and final synthesis criteria.
 6. Execute in order: understand -> define -> first-pass role outputs -> cross-role review when useful -> CEO adjudication -> design or write revision -> validation -> final integration.
 7. Save durable final output to the selected output path and record it in the artifact index. In full workspace mode, put final artifacts under `outputs/` and choose the best format for each artifact.
 8. Update `reflections.md` only for durable tasks where reusable lessons or follow-ups emerged.
@@ -342,7 +395,8 @@ Every durable task must end with:
 - role or subagent handoff blocks and return contracts
 - success criteria, evidence needed, review plan, and validation plan for medium/complex work
 - role skill-routing decisions
-- cross-role review and CEO adjudication when multiple role perspectives materially interact
+- review relevance decision and decision nodes before cross-role review
+- cross-role review and CEO adjudication when multiple role perspectives materially interact with the same decision
 - status disposition for blocked, review, and follow-up items
 - KB used or requested
 - final artifact summary
@@ -365,7 +419,9 @@ Before claiming a durable task is complete, verify:
 - Role tasks record skill triggers, decisions, evidence requirements, artifact format, and output paths.
 - Facts, assumptions, recommendations, and evidence gaps are separated.
 - Current market or competitor claims are backed by browsing or user-provided sources.
-- Cross-role review happened when selected roles materially affected each other, or the reason for skipping it is explicit.
+- Cross-role review is driven by decision nodes rather than role count alone.
+- The review relevance gate records `none`, `targeted`, or `full`, with a reason.
+- Cross-role review happened when selected roles materially affected the same decision, or the reason for skipping it is explicit.
 - CEO / Manager adjudicated accepted, rejected, and deferred role suggestions before final integration.
 - Blocked, in-review, and follow-up items have owners, exit conditions, and final dispositions.
 - Final artifact reflects the adjudication instead of leaving role feedback as loose notes.

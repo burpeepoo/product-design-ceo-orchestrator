@@ -80,6 +80,25 @@ test("copySkill installs required skill files and references", () => {
   fs.rmSync(tempRoot, { recursive: true, force: true });
 });
 
+test("skill documents decision-driven cross-role review", () => {
+  const packageRoot = path.resolve(__dirname, "..");
+  const skill = fs.readFileSync(path.join(packageRoot, "SKILL.md"), "utf8");
+  const orchestration = fs.readFileSync(
+    path.join(packageRoot, "references", "orchestration-model.md"),
+    "utf8",
+  );
+  const scenarios = fs.readFileSync(
+    path.join(packageRoot, "tests", "pressure-scenarios.md"),
+    "utf8",
+  );
+
+  assert.match(skill, /Review Relevance Gate/);
+  assert.match(skill, /cross_role_review_decision/);
+  assert.match(skill, /decision_nodes/);
+  assert.match(orchestration, /decision-driven/);
+  assert.match(scenarios, /Cross-Role Review Must Be Decision-Driven/);
+});
+
 test("AI target map documents supported explicit runtimes", () => {
   assert.deepEqual(Object.keys(AI_TARGETS).sort(), [
     "claude",
