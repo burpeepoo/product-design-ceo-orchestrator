@@ -1,0 +1,50 @@
+{
+  "name": "product-design-ceo-orchestrator",
+  "version": "0.2.0",
+  "description": "Installable agent skill for product-design orchestration, PRDs, strategy, research, product reviews, and UI demo planning.",
+  "license": "MIT",
+  "author": "Kai Zhang",
+  "homepage": "https://github.com/burpeepoo/product-design-ceo-orchestrator#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/burpeepoo/product-design-ceo-orchestrator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/burpeepoo/product-design-ceo-orchestrator/issues"
+  },
+  "bin": {
+    "product-design-ceo-orchestrator": "bin/product-design-ceo-orchestrator.js",
+    "pdco": "bin/product-design-ceo-orchestrator.js"
+  },
+  "files": [
+    "bin/",
+    "lib/",
+    "references/",
+    "tests/pressure-scenarios.md",
+    "SKILL.md",
+    "README.md",
+    "LICENSE",
+    "skill.json"
+  ],
+  "scripts": {
+    "test": "node --test tests/install.test.js",
+    "pack:check": "npm pack --dry-run"
+  },
+  "keywords": [
+    "agent-skill",
+    "codex",
+    "claude",
+    "product-design",
+    "product-management",
+    "prd",
+    "requirements",
+    "strategy",
+    "ui-demo"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

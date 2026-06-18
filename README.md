@@ -35,21 +35,62 @@ For tiny copy tweaks or narrow UX opinions, the skill intentionally downgrades t
 ├── SKILL.md
 ├── README.md
 ├── LICENSE
+├── package.json
 ├── skill.json
+├── bin/
+│   └── product-design-ceo-orchestrator.js
+├── lib/
+│   └── install.js
 ├── references/
 │   ├── kb-policy.md
 │   ├── orchestration-model.md
 │   ├── role-catalog.md
 │   └── workspace-structure.md
 └── tests/
+    ├── install.test.js
     └── pressure-scenarios.md
 ```
 
 ## Install
 
+### npm / npx
+
+Install explicitly with `npx`:
+
+```bash
+npx product-design-ceo-orchestrator install --ai codex
+```
+
+Supported explicit targets:
+
+```bash
+npx product-design-ceo-orchestrator install --ai codex
+npx product-design-ceo-orchestrator install --ai claude
+npx product-design-ceo-orchestrator install --ai cursor
+```
+
+Overwrite an existing local copy:
+
+```bash
+npx product-design-ceo-orchestrator install --ai codex --force
+```
+
+Install into a custom agent skills directory:
+
+```bash
+npx product-design-ceo-orchestrator install \
+  --target ~/.my-agent/skills/product-design-ceo-orchestrator
+```
+
+Preview the target path without writing files:
+
+```bash
+npx product-design-ceo-orchestrator install --ai codex --dry-run
+```
+
 ### Codex
 
-Install globally for Codex by cloning this repository into the Codex skills directory:
+Manual Git install for Codex:
 
 ```bash
 mkdir -p ~/.codex/skills
@@ -61,7 +102,7 @@ Restart Codex or open a new session after installation.
 
 ### Claude Code
 
-Clone into Claude Code's skills directory:
+Manual Git install for Claude Code:
 
 ```bash
 mkdir -p ~/.claude/skills
@@ -81,7 +122,13 @@ The `references/` and `tests/` folders should stay next to `SKILL.md`.
 
 ## Update
 
-Because this repository is intended as the source of truth for future skill updates, update an installed copy with:
+If installed with npm / npx, re-run the explicit install with `--force`:
+
+```bash
+npx product-design-ceo-orchestrator@latest install --ai codex --force
+```
+
+If installed with Git, update an installed copy with:
 
 ```bash
 cd ~/.codex/skills/product-design-ceo-orchestrator
@@ -127,6 +174,8 @@ The skill includes pressure scenarios in `tests/pressure-scenarios.md`. Use them
 Basic static checks:
 
 ```bash
+npm test
+npm pack --dry-run
 test -s SKILL.md
 test -s references/orchestration-model.md
 test -s references/role-catalog.md
@@ -142,12 +191,20 @@ Future updates should be committed and pushed to this repository:
 
 ```bash
 git status -sb
-git add SKILL.md references tests README.md skill.json LICENSE .gitignore
+git add SKILL.md README.md LICENSE package.json skill.json .gitignore bin lib references tests
 git commit -m "update product design ceo orchestrator skill"
 git push
 ```
 
-For larger changes, update `tests/pressure-scenarios.md` first so the expected behavior is explicit before editing the skill.
+For npm releases:
+
+```bash
+npm test
+npm pack --dry-run
+npm publish
+```
+
+For larger behavior changes, update `tests/pressure-scenarios.md` first so the expected behavior is explicit before editing the skill.
 
 ## License
 
