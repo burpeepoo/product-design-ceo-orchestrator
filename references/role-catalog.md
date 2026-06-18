@@ -22,6 +22,35 @@ Role selection rules:
 - Use 5+ roles only for complex tasks with real cross-functional risk.
 - Do not create a role file for a role that only contributes generic commentary.
 - If a role depends on missing evidence, record the gap instead of inventing the role's findings.
+- Before each role executes, record portable skill trigger categories and a skill decision.
+- Role outputs must return to CEO / Manager final integration; separated role notes are not a final answer.
+
+## Portable Skill Trigger Categories
+
+Use these trigger categories for role-level skill selection. They are search cues, not hardcoded skill names.
+
+| Role | Recommended skill triggers |
+|---|---|
+| User Researcher | user research, JTBD, interview synthesis, persona, usability |
+| Market Analyst | competitor research, market scan, web evidence, positioning |
+| Requirements Specialist | PRD, requirements, acceptance criteria, edge cases |
+| Product Designer | UX review, IA, interaction design, prototype, UI demo |
+| Tech Lead | feasibility, architecture, implementation plan, testing, TDD |
+| Data / Operations Analyst | metrics, funnel, experiment, dashboard, KPI |
+| QA / Acceptance Specialist | QA, review, validation, test scenarios, release readiness |
+
+Role task block:
+
+```text
+role:
+task:
+expected_output:
+recommended_skill_triggers:
+skill_decision: used | unavailable | not_needed
+evidence_requirement:
+artifact_format:
+output_path:
+```
 
 ## CEO / Manager
 

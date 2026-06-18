@@ -2,15 +2,17 @@
 
 A reusable agent skill for product-management and product-design work that benefits from CEO-style orchestration without unnecessary ceremony.
 
-The skill helps an agent decide when to answer directly, when to use a few product-role perspectives, and when to create a full multi-phase workspace for durable product artifacts such as PRDs, feature proposals, UI demo plans, competitor research, product reviews, and roadmap strategy.
+The skill helps an agent decide when to answer directly, when to use a few product-role perspectives, when each role should route to another available skill, and when to create a full multi-phase workspace for durable product artifacts such as PRDs, feature proposals, UI demo plans, competitor research, product reviews, existing product optimization, UX redesign, and roadmap strategy.
 
 ## What This Skill Optimizes For
 
 - correct scope before execution
 - the lightest useful workflow
 - explicit role selection
+- portable role-level skill routing
 - evidence-aware product recommendations
-- final integrated artifacts instead of scattered notes
+- knowledge-base-ready artifacts instead of scattered notes
+- artifact formats chosen for the work instead of forced Markdown
 - clear validation before claiming completion
 
 ## When It Activates
@@ -19,6 +21,9 @@ Use this skill when the user asks for durable product-design work such as:
 
 - PRDs and requirements
 - feature design and user flows
+- existing product optimization
+- UX improvement, redesign, and flow optimization
+- product audits and feature iteration
 - product strategy and roadmap thinking
 - competitor or market research
 - user research synthesis
@@ -153,13 +158,46 @@ Review this product idea quickly. Do not make a big framework.
 Design a UI demo for a new family weekly report experience. I need something execution-ready.
 ```
 
+```text
+Review our current settings page and propose an optimization plan.
+```
+
 The skill chooses among three operating modes:
 
 | Mode | Use when | Output |
 |---|---|---|
 | None | quick critique, copy, narrow UX suggestion | chat answer |
-| Light | medium PRD, proposal, review, flow, research summary | one integrated Markdown artifact |
-| Full | complex work with roles, phases, KB, artifacts, or handoff | workspace with `outputs/final.md` |
+| Light | medium PRD, proposal, existing product optimization, review, flow, research summary | artifact index plus knowledge-base-ready artifacts |
+| Full | complex work with roles, phases, KB, artifacts, or handoff | workspace with `outputs/` artifacts and index |
+
+## Role-Level Skill Routing
+
+For medium and complex tasks, each selected role records a portable skill-routing decision before execution:
+
+```text
+role:
+task:
+expected_output:
+recommended_skill_triggers:
+skill_decision: used | unavailable | not_needed
+evidence_requirement:
+artifact_format:
+output_path:
+```
+
+The skill uses trigger categories rather than hardcoded local skill names. For example, Market Analyst may look for competitor research, market scan, web evidence, or positioning skills; Product Designer may look for UX review, IA, interaction design, prototype, or UI demo skills. If the runtime does not provide a matching skill, the role records `unavailable` and continues.
+
+## Knowledge Artifacts
+
+Medium and complex tasks default to a saveable artifact suitable for a knowledge base. The artifact does not have to be Markdown:
+
+- PRDs, product rules, strategy, and decision records: Markdown or document format.
+- Stakeholder review pages, visual walkthroughs, and UI critiques: HTML, image-backed review page, or slide/document format.
+- Competitor tables, metric reviews, and structured comparisons: CSV/XLSX, Markdown table, or data-backed report.
+- Visual explanation or prototype direction: HTML, image, diagram, or design-spec document.
+- Structured reusable data: JSON or another explicit schema.
+
+Simple tasks stay lightweight unless the user asks for a saved artifact.
 
 ## Validation
 
@@ -167,6 +205,10 @@ The skill includes pressure scenarios in `tests/pressure-scenarios.md`. Use them
 
 - avoids over-orchestration
 - uses role perspectives only when they add distinct value
+- routes role tasks to portable skill triggers when useful
+- creates knowledge-base-ready artifacts for medium/complex work
+- allows artifact format to fit the content instead of forcing Markdown
+- recognizes existing product optimization as in scope
 - records KB and evidence status when needed
 - backs current market or competitor claims with sources
 - finishes durable work with one integrated recommendation

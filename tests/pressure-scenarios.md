@@ -11,7 +11,8 @@ An agent using this skill should:
 - ask only material questions
 - avoid fake role work
 - record KB status when evidence matters
-- finish durable work with one integrated artifact and explicit risks
+- route each role task to portable skill triggers when useful
+- finish durable medium/complex work with a knowledge-base-ready artifact and explicit risks
 
 ## Scenario 1: Tiny Copy Fix Under Process Temptation
 
@@ -151,6 +152,104 @@ Expected behavior:
 Failure this prevents:
 - Leaving scattered role notes without a decision.
 
+## Scenario 8: Role Task Selects Portable Skill Triggers
+
+User request:
+
+> Compare three competitors and turn the findings into a product recommendation.
+
+Pressures:
+- The CEO has already selected Market Analyst.
+- The runtime may or may not have a concrete competitor-analysis skill installed.
+- The agent may skip skill selection and just write from memory.
+
+Expected behavior:
+- Create a role task block for Market Analyst.
+- Include recommended skill triggers such as market research, competitor research, web evidence, and positioning.
+- Record the skill decision as used, unavailable, or not needed.
+- Record evidence requirement and artifact format before executing.
+- Return role output to CEO final integration.
+
+Failure this prevents:
+- Role work bypassing available skills or leaving skill choice invisible.
+
+## Scenario 9: Existing Product Optimization Is Supported
+
+User request:
+
+> Review our current settings page and propose an optimization plan.
+
+Pressures:
+- The request is about an existing product, not a new idea.
+- It may look like a quick critique.
+- The output should be reusable by the product team.
+
+Expected behavior:
+- Classify as medium unless the user explicitly asks for a quick take.
+- Use light workspace by default.
+- Select Product Designer and QA / Acceptance Specialist, adding Tech Lead only if implementation constraints matter.
+- Produce a knowledge-base-ready artifact, not only chat notes.
+
+Failure this prevents:
+- Treating the skill as only for new product ideas or new PRDs.
+
+## Scenario 10: Medium PRD Persists A Knowledge Artifact
+
+User request:
+
+> Draft a PRD for calendar conflict reminders.
+
+Pressures:
+- The answer could fit in chat.
+- The user did not explicitly ask for a file.
+- PRD decisions should remain reusable.
+
+Expected behavior:
+- Classify as medium.
+- Use light workspace by default.
+- Create an artifact index and one PRD artifact in an appropriate format.
+- Record artifact format, output path, assumptions, evidence gaps, and follow-ups.
+
+Failure this prevents:
+- Losing durable product decisions inside chat context.
+
+## Scenario 11: Artifact Format Is Chosen By Content
+
+User request:
+
+> Compare competitor onboarding patterns and include a table, then create a visual review page for stakeholders.
+
+Pressures:
+- Markdown is easy but may not be the best review format.
+- The task includes table comparison and stakeholder review.
+
+Expected behavior:
+- Allow CSV/XLSX or Markdown table for the comparison artifact.
+- Allow HTML or image-backed artifact for the visual review page.
+- Record why each format was chosen.
+- Do not force Markdown unless the user asked for Markdown.
+
+Failure this prevents:
+- Over-constraining knowledge artifacts to Markdown.
+
+## Scenario 12: Simple Copy Does Not Force Artifact
+
+User request:
+
+> Make this button copy clearer: "Save family edits".
+
+Pressures:
+- The skill now prefers durable artifacts for medium/complex work.
+- The agent may over-apply artifact persistence.
+
+Expected behavior:
+- Classify as simple.
+- Do not create files unless the user asks for a saved artifact.
+- Provide the revised copy and concise rationale.
+
+Failure this prevents:
+- Generating unnecessary knowledge-base artifacts for tiny tasks.
+
 ## Manual Verification Checklist
 
 Before deploying edits to this skill, confirm:
@@ -160,5 +259,7 @@ Before deploying edits to this skill, confirm:
 - `references/orchestration-model.md` includes a decision table and downgrade rule.
 - `references/role-catalog.md` includes a role selection matrix.
 - `references/workspace-structure.md` includes none, light, and full workspace modes.
+- Medium and complex tasks default to knowledge-base-ready artifacts without forcing Markdown.
+- Role tasks include portable skill trigger routing and visible skill decisions.
 - Durable task completion is checked by the final validation checklist.
 - These pressure scenarios still map to explicit instructions in the skill.
