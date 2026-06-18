@@ -2,14 +2,18 @@
 
 A reusable agent skill for product-management and product-design work that benefits from CEO-style orchestration without unnecessary ceremony.
 
-The skill helps an agent decide when to answer directly, when to use a few product-role perspectives, when each role should route to another available skill, and when to create a full multi-phase workspace for durable product artifacts such as PRDs, feature proposals, UI demo plans, competitor research, product reviews, existing product optimization, UX redesign, and roadmap strategy.
+The skill helps an agent decide when to answer directly, when to use a few product-role perspectives, when each role should route to another available skill, when role outputs should review each other, and when to create a full multi-phase workspace for durable product artifacts such as PRDs, feature proposals, UI demo plans, competitor research, product reviews, existing product optimization, UX redesign, and roadmap strategy.
 
 ## What This Skill Optimizes For
 
 - correct scope before execution
+- correctness, evidence, and long-term maintainability over fastest possible output
 - the lightest useful workflow
 - explicit role selection
+- subagent orchestration when the runtime supports it and role tasks are independent
 - portable role-level skill routing
+- delivery discipline gates before claiming durable work is complete
+- cross-role collaboration and CEO adjudication when roles disagree
 - evidence-aware product recommendations
 - knowledge-base-ready artifacts instead of scattered notes
 - artifact formats chosen for the work instead of forced Markdown
@@ -48,6 +52,7 @@ For tiny copy tweaks or narrow UX opinions, the skill intentionally downgrades t
 │   └── install.js
 ├── references/
 │   ├── kb-policy.md
+│   ├── delivery-discipline.md
 │   ├── orchestration-model.md
 │   ├── role-catalog.md
 │   └── workspace-structure.md
@@ -187,6 +192,22 @@ output_path:
 
 The skill uses trigger categories rather than hardcoded local skill names. For example, Market Analyst may look for competitor research, market scan, web evidence, or positioning skills; Product Designer may look for UX review, IA, interaction design, prototype, or UI demo skills. If the runtime does not provide a matching skill, the role records `unavailable` and continues.
 
+## Subagent Execution
+
+For medium and complex tasks, the skill records whether the runtime supports subagent orchestration. If supported and role tasks are independent, those tasks are assigned to subagents with explicit context, evidence requirements, expected output, artifact format, and return path.
+
+If subagents are unavailable, blocked, unsafe, or the tasks are dependent, the skill falls back to sequential execution and records the reason. CEO / Manager orchestration, cross-role review, adjudication, validation, and final integration stay with the main agent.
+
+## Delivery Discipline
+
+Medium and complex tasks define success criteria, evidence needs, review plan, and validation plan before execution. Before claiming durable work is complete, the final output records validation performed, evidence collected, known risks, and unverified items.
+
+This skill optimizes for correctness, evidence, and maintainability. It does not optimize for the fastest possible answer when speed would hide uncertainty or skip validation.
+
+## Cross-Role Collaboration
+
+When selected roles materially affect the same product decision, their first-pass outputs go through a cross-role review. Roles record suggestions, concerns, questions, and conflicts; CEO / Manager then adjudicates accepted, rejected, and deferred feedback before the final artifact is revised.
+
 ## Knowledge Artifacts
 
 Medium and complex tasks default to a saveable artifact suitable for a knowledge base. The artifact does not have to be Markdown:
@@ -205,7 +226,10 @@ The skill includes pressure scenarios in `tests/pressure-scenarios.md`. Use them
 
 - avoids over-orchestration
 - uses role perspectives only when they add distinct value
+- uses subagents for independent role tasks when supported, with sequential fallback when unsupported
 - routes role tasks to portable skill triggers when useful
+- applies delivery discipline gates for durable medium/complex work
+- uses cross-role collaboration and CEO adjudication when role perspectives interact
 - creates knowledge-base-ready artifacts for medium/complex work
 - allows artifact format to fit the content instead of forcing Markdown
 - recognizes existing product optimization as in scope
@@ -219,12 +243,13 @@ Basic static checks:
 npm test
 npm pack --dry-run
 test -s SKILL.md
+test -s references/delivery-discipline.md
 test -s references/orchestration-model.md
 test -s references/role-catalog.md
 test -s references/workspace-structure.md
 test -s references/kb-policy.md
 test -s tests/pressure-scenarios.md
-rg -n "description: Use when|Quick Decision Table|Role Selection Matrix|Workspace Modes|Pressure Scenarios" .
+rg -n "description: Use when|Subagent Execution Mode|Delivery Discipline Gates|Cross-Role Collaboration Loop|Role Selection Matrix|Workspace Modes|Pressure Scenarios" .
 ```
 
 ## Publishing Workflow

@@ -32,7 +32,7 @@ Still state why no multi-role split is needed, but keep it to one sentence.
 
 ### Medium
 
-Use several role perspectives but execute sequentially in one agent.
+Use several role perspectives. If subagent orchestration is supported and role tasks are independent, assign those role tasks to subagents; otherwise execute sequentially in one agent.
 
 Examples:
 - PRD draft
@@ -47,9 +47,10 @@ Examples:
 Recommended phases:
 1. understand
 2. define
-3. design or write
-4. review
-5. final synthesis
+3. first-pass role outputs
+4. light cross-role review when role perspectives interact
+5. CEO adjudication and final synthesis
+6. validation
 
 Use light workspace by default and produce one knowledge-base-ready artifact plus an artifact index. Do not create role files unless the task grows into complex work.
 
@@ -69,9 +70,11 @@ Examples:
 Default phases:
 1. Understand problem: user, scenario, market, competitor, constraints.
 2. Define product: goals, scope, requirements, acceptance criteria.
-3. Design output: IA, flow, UI, prototype, PRD, demo, or artifact.
-4. Review: product goal fit, technical feasibility, risks.
-5. Final integration: one CEO-readable final result and paths.
+3. First-pass role outputs: role-specific findings and proposals.
+4. Cross-role review: suggestions, concerns, questions, and conflicts.
+5. CEO adjudication: accepted, rejected, and deferred role feedback.
+6. Final artifact revision: IA, flow, UI, prototype, PRD, demo, or artifact.
+7. Validation and final integration: one CEO-readable final result and paths.
 
 ## Split Rules
 
@@ -90,13 +93,28 @@ Do not split when:
 
 ## Execution Mode
 
-Default: one agent executes roles sequentially and labels each role's contribution.
+Default for durable medium and complex work: check subagent capability before role execution.
 
-Suggest parallel/sub-agent execution only when:
-- tasks are independent
-- the environment supports subagents
-- the user wants speed
-- each subagent can get clear context and output contract
+Record:
+
+```text
+subagent_capability: supported | unavailable | blocked
+execution_mode: subagents | sequential
+fallback_reason:
+```
+
+Use subagents when:
+- the runtime supports subagent or multi-agent orchestration
+- two or more selected role tasks are independent
+- each role can receive clear context, boundaries, evidence needs, expected output, artifact format, and return path
+
+Use sequential execution when:
+- subagents are unavailable, blocked, or unsafe
+- tasks are dependent
+- the task is simple
+- delegation would reduce correctness, evidence quality, or integration clarity
+
+CEO / Manager orchestration, cross-role review, adjudication, validation, and final integration stay with the main agent.
 
 ## Role Skill Routing
 
@@ -113,17 +131,52 @@ For medium and complex work, each role task records portable skill-routing decis
 
 Use runtime skill discovery when available. Do not assume a specific skill name exists on every machine. If a matching skill is unavailable, continue with the role boundary and record the gap.
 
+## Delivery Discipline
+
+For medium and complex work, record these before execution:
+
+- success criteria
+- evidence needed
+- review plan
+- validation plan
+
+Before completion, record:
+
+- validation performed
+- evidence collected
+- known risks
+- unverified items
+
+Simple tasks do not need formal gates, but unsupported claims must still be marked as assumptions.
+
+## Cross-Role Collaboration
+
+Use cross-role collaboration when selected roles affect the same product decision.
+
+- Medium: one light review block for material suggestions, concerns, questions, and conflicts.
+- Complex: formal review artifact or review phase output.
+- CEO / Manager must adjudicate accepted, rejected, and deferred suggestions before final synthesis.
+- Final artifacts must reflect accepted changes or state why they were not applied.
+
 ## Required CEO Decisions
 
 Before executing, produce:
 - task classification
 - selected roles
 - selected phases
+- subagent capability
+- execution mode
+- fallback reason when sequential
 - KB needed
 - workspace mode and directory plan
 - output artifacts
 - artifact format decisions
 - role skill-routing decisions
+- success criteria
+- evidence needed
+- review plan
+- validation plan
+- cross-role collaboration depth: none / light / full
 - assumptions and open questions
 
 ## First Response Shape
@@ -131,7 +184,7 @@ Before executing, produce:
 Keep the first response proportional to the task:
 
 - Simple: one sentence explaining direct handling, then answer.
-- Medium: one short paragraph naming roles, KB status, skill-routing approach, artifact format, and expected artifact path.
-- Complex: a concise plan with roles, phases, workspace mode, KB status, skill-routing approach, artifact formats, and final integration criteria.
+- Medium: one short paragraph naming roles, KB status, skill-routing approach, review depth, artifact format, and expected artifact path.
+- Complex: a concise plan with roles, phases, workspace mode, KB status, skill-routing approach, review depth, artifact formats, and final integration criteria.
 
 Do not turn the first response into a full final artifact unless the request is simple.

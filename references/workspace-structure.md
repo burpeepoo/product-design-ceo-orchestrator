@@ -22,7 +22,7 @@ Choose the lightest mode that can preserve the work. Upgrade only when the task 
   kb-notes.md
 ```
 
-Use light layout for medium tasks. Store one or more knowledge-base-ready artifacts under `artifacts/` in the format best suited to the work.
+Use light layout for medium tasks. Store one or more knowledge-base-ready artifacts under `artifacts/` in the format best suited to the work. A light task may include a concise cross-role review, decision log, or validation note when it improves the artifact.
 
 ## Full Layout
 
@@ -60,7 +60,7 @@ Use light layout for medium tasks. Store one or more knowledge-base-ready artifa
 - `artifacts/`: light-mode artifacts in the best format for the work.
 - `kb-notes.md`: light-mode sources, assumptions, and evidence gaps.
 - `ceo-brief.md`: original user request, assumptions, constraints, requested outputs.
-- `orchestration-plan.md`: roles, phases, dependencies, KB, execution order, role skill routing, artifact formats, and output contract.
+- `orchestration-plan.md`: roles, phases, dependencies, KB, delivery discipline gates, execution order, role skill routing, review plan, artifact formats, validation plan, and output contract.
 - `kb/README.md`: what sources are needed, available, missing, and used.
 - `kb/sources/`: copied or linked local materials when the user allows it.
 - `roles/*.md`: role boundary, inputs, outputs, and current assignment.
@@ -68,7 +68,7 @@ Use light layout for medium tasks. Store one or more knowledge-base-ready artifa
 - `matters/*/output.md`: phase-specific output.
 - `outputs/`: final CEO-readable synthesis and supporting artifacts in appropriate formats.
 - `outputs/artifact-index.md`: full-mode index of all final and supporting artifacts.
-- `outputs/artifacts/`: HTML, images, diagrams, code, spreadsheets, data files, or other deliverables.
+- `outputs/artifacts/`: HTML, images, diagrams, code, spreadsheets, data files, cross-role review artifacts, decision logs, validation notes, or other deliverables.
 - `reflections.md`: lessons, mistakes, follow-ups, and reusable product insight.
 
 ## Creation Rules
@@ -91,8 +91,20 @@ Full-mode `orchestration-plan.md` must include:
 - workspace mode
 - selected roles and why
 - phases and expected outputs
+- subagent capability
+- execution mode
+- fallback reason when sequential
 - role skill-routing decisions
 - KB needed and current status
+- success criteria
+- evidence needed
+- evidence status
+- review plan
+- review status
+- validation plan
+- validation status
+- cross-role review depth: none / light / full
+- CEO adjudication expectations
 - artifact format decisions
 - execution order
 - final artifact paths
@@ -103,8 +115,18 @@ Light-mode `README.md` must include:
 - original request
 - classification and why light mode was enough
 - selected role perspectives
+- subagent capability
+- execution mode
+- fallback reason when sequential
 - KB used or missing
 - role skill-routing decisions
+- success criteria
+- evidence needed
+- evidence status
+- review plan
+- review status
+- validation plan
+- validation status
 - artifact format decisions
 - final artifact paths
 
@@ -114,6 +136,12 @@ Light-mode `README.md` must include:
 - artifact format
 - output path
 - role or phase source
+- execution mode
 - intended knowledge-base destination, if known
+- evidence status
 - evidence gaps
+- review status
+- validation performed
+- known risks
+- unverified items
 - follow-up or maintenance notes

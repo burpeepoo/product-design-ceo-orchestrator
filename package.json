@@ -1,7 +1,7 @@
 {
   "name": "product-design-ceo-orchestrator",
-  "version": "0.3.0",
-  "description": "Installable agent skill for product-design orchestration, role-level skill routing, knowledge artifacts, PRDs, strategy, research, product reviews, existing product optimization, and UI demo planning.",
+  "version": "0.4.0",
+  "description": "Installable agent skill for product-design orchestration, delivery discipline, cross-role collaboration, knowledge artifacts, PRDs, strategy, research, product reviews, existing product optimization, and UI demo planning.",
   "license": "MIT",
   "author": "Kai Zhang",
   "homepage": "https://github.com/burpeepoo/product-design-ceo-orchestrator#readme",
@@ -41,6 +41,8 @@
     "strategy",
     "knowledge-artifact",
     "skill-routing",
+    "delivery-discipline",
+    "cross-role-review",
     "ux-review",
     "product-optimization",
     "ui-demo"

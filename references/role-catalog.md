@@ -23,6 +23,7 @@ Role selection rules:
 - Do not create a role file for a role that only contributes generic commentary.
 - If a role depends on missing evidence, record the gap instead of inventing the role's findings.
 - Before each role executes, record portable skill trigger categories and a skill decision.
+- After first-pass outputs, selected roles should challenge each other only where their boundaries materially overlap.
 - Role outputs must return to CEO / Manager final integration; separated role notes are not a final answer.
 
 ## Portable Skill Trigger Categories
@@ -38,6 +39,40 @@ Use these trigger categories for role-level skill selection. They are search cue
 | Tech Lead | feasibility, architecture, implementation plan, testing, TDD |
 | Data / Operations Analyst | metrics, funnel, experiment, dashboard, KPI |
 | QA / Acceptance Specialist | QA, review, validation, test scenarios, release readiness |
+
+## Collaboration Boundaries
+
+Use these as review cues after first-pass role outputs. They are not reasons to add a role by themselves.
+
+| Reviewer | Challenges | Focus |
+|---|---|---|
+| Requirements Specialist | Product Designer, CEO / Manager | Missing states, boundaries, acceptance criteria, edge cases, scope clarity |
+| Product Designer | Requirements Specialist, CEO / Manager | Whether flows are understandable, usable, coherent, and traceable to user needs |
+| Tech Lead | CEO / Manager, Product Designer, Requirements Specialist | Feasibility, dependencies, implementation risk, sequencing, testability |
+| QA / Acceptance Specialist | All selected roles | Failure modes, release readiness, validation gaps, regression risk |
+| Market Analyst | CEO / Manager, Product Designer, Requirements Specialist | Differentiation, category conventions, competitor evidence, positioning risk |
+| Data / Operations Analyst | CEO / Manager, Requirements Specialist, Product Designer | KPI fit, funnel impact, experimentability, measurement risk |
+| User Researcher | CEO / Manager, Requirements Specialist, Product Designer | User evidence, JTBD fit, scenario realism, usability assumptions |
+
+Cross-role review block:
+
+```text
+reviewer_role:
+reviews:
+suggestions:
+concerns:
+questions:
+conflicts:
+```
+
+CEO adjudication block:
+
+```text
+accepted_changes:
+rejected_changes_with_reasons:
+deferred_questions:
+final_artifact_updates:
+```
 
 Role task block:
 
@@ -63,6 +98,7 @@ Inputs:
 
 Outputs:
 - orchestration plan
+- cross-role adjudication
 - final integrated artifact
 - risks and next steps
 

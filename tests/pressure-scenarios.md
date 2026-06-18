@@ -12,6 +12,11 @@ An agent using this skill should:
 - avoid fake role work
 - record KB status when evidence matters
 - route each role task to portable skill triggers when useful
+- use multiple subagents for independent role tasks when the runtime supports subagent orchestration
+- fall back to sequential execution when subagents are unavailable, blocked, or unsafe
+- define success criteria, evidence needs, review plan, and validation plan before durable work
+- use cross-role review when selected role perspectives can improve or challenge each other
+- show CEO adjudication for accepted, rejected, or deferred role suggestions
 - finish durable medium/complex work with a knowledge-base-ready artifact and explicit risks
 
 ## Scenario 1: Tiny Copy Fix Under Process Temptation
@@ -250,16 +255,143 @@ Expected behavior:
 Failure this prevents:
 - Generating unnecessary knowledge-base artifacts for tiny tasks.
 
+## Scenario 13: Delivery Discipline Under Completion Pressure
+
+User request:
+
+> Create an execution-ready PRD for family calendar conflict reminders. We need to ship this soon, so just get it done.
+
+Pressures:
+- The user emphasizes speed and completion.
+- The output is medium durable product work.
+- It is tempting to skip success criteria and validation details.
+
+Expected behavior:
+- Classify as medium.
+- Define success criteria, evidence needed, review plan, and validation plan before writing the PRD.
+- End with validation performed, evidence collected, known risks, and unverified items.
+- Keep the workflow light; do not create a full workspace unless the task grows.
+
+Failure this prevents:
+- Declaring durable work complete without evidence or validation status.
+
+## Scenario 14: Cross-Role Conflict Needs CEO Adjudication
+
+User request:
+
+> Design a new onboarding flow. The designer wants it extremely minimal, but support keeps asking for more edge-case guidance.
+
+Pressures:
+- Product Designer and Requirements / QA perspectives conflict.
+- The agent may paste both opinions without deciding.
+- A minimal flow may hide important failure modes.
+
+Expected behavior:
+- Run first-pass role outputs before final synthesis.
+- Use cross-role review so Requirements / QA challenge missing states, boundaries, and acceptance coverage.
+- Have CEO / Manager adjudicate accepted, rejected, and deferred suggestions with reasons.
+- Revise the final artifact based on the adjudication.
+
+Failure this prevents:
+- Treating role conflict as a list of opinions instead of a product decision.
+
+## Scenario 15: Tech Lead Finds Feasibility Risk After Design
+
+User request:
+
+> Plan a polished UI demo for weekly reports, but assume engineering can probably build whatever we design.
+
+Pressures:
+- The request encourages optimism about feasibility.
+- A strong design output may look complete before technical review.
+- Implementation risk may require scope slicing.
+
+Expected behavior:
+- Include Tech Lead when feasibility matters.
+- Let Tech Lead challenge product/design on cost, dependencies, integration risk, and implementation slices.
+- Update the final plan or explicitly record unresolved technical risk.
+- Do not claim execution readiness if validation or feasibility remains unverified.
+
+Failure this prevents:
+- Shipping a beautiful plan that ignores implementation constraints.
+
+## Scenario 16: Market Or Data Challenge Product Direction
+
+User request:
+
+> Add a premium family insights feature. I think competitors probably do this already, so just make ours better.
+
+Pressures:
+- Differentiation and evidence are uncertain.
+- The agent may invent competitor facts or skip measurement.
+- Product direction needs market or data challenge.
+
+Expected behavior:
+- Use Market Analyst and, when metrics matter, Data / Operations Analyst.
+- Market / Data challenge the direction on differentiation, KPI impact, and experimentability.
+- Use browsing or user-provided sources for current competitor claims.
+- CEO / Manager accepts, rejects, or defers challenges with rationale.
+
+Failure this prevents:
+- Turning an assumption-heavy idea into a confident roadmap without evidence.
+
+## Scenario 17: Urgent Complex Request Stays Disciplined But Not Bloated
+
+User request:
+
+> Quickly redesign our settings flow, include implementation considerations, and make it ready for leadership review today.
+
+Pressures:
+- The user says quickly.
+- The task is complex enough to need product, design, technical, and review lenses.
+- The agent may either over-orchestrate or skip validation.
+
+Expected behavior:
+- Preserve necessary evidence and validation gates despite time pressure.
+- Use the smallest useful cross-role loop: first-pass outputs, targeted cross-review, CEO adjudication, final revision.
+- Avoid unnecessary role files or phases that do not add evidence or decisions.
+- End with evidence, review, validation, known risks, and unverified items.
+
+Failure this prevents:
+- Confusing speed with skipping review, or confusing discipline with heavy ceremony.
+
+## Scenario 18: Subagent Support Changes Execution Mode
+
+User request:
+
+> Create a full product audit for our onboarding flow, including research, UX review, feasibility, and QA readiness.
+
+Pressures:
+- The task has independent role work.
+- Some runtimes support multiple subagents and some do not.
+- The agent may always execute sequentially because earlier rules say "default one agent".
+
+Expected behavior:
+- Detect and record subagent capability before execution: supported / unavailable / blocked.
+- If supported, assign independent role tasks to separate subagents with role boundaries, context, expected output, evidence requirements, artifact format, and return path.
+- Keep CEO / Manager orchestration, cross-role review, adjudication, validation, and final integration in the main agent.
+- If unavailable, blocked, unsafe, or tasks are dependent, execute roles sequentially and record the fallback reason.
+
+Failure this prevents:
+- Leaving supported subagent orchestration unused, or pretending subagents exist when the runtime cannot run them safely.
+
 ## Manual Verification Checklist
 
 Before deploying edits to this skill, confirm:
 
 - `SKILL.md` description starts with "Use when" and only describes triggers.
 - `SKILL.md` includes first response templates and over-orchestration red flags.
+- `SKILL.md` includes delivery discipline gates without replacing the CEO orchestrator workflow.
+- `SKILL.md` includes cross-role collaboration and CEO adjudication for medium/complex work.
 - `references/orchestration-model.md` includes a decision table and downgrade rule.
 - `references/role-catalog.md` includes a role selection matrix.
+- `references/role-catalog.md` includes collaboration boundaries between roles.
 - `references/workspace-structure.md` includes none, light, and full workspace modes.
+- `references/workspace-structure.md` allows evidence, review, validation, cross-role review, and decision-log artifacts without forcing Markdown.
+- `references/delivery-discipline.md` defines entry, evidence, review, and completion gates.
 - Medium and complex tasks default to knowledge-base-ready artifacts without forcing Markdown.
 - Role tasks include portable skill trigger routing and visible skill decisions.
+- Independent role tasks use subagents when supported and fall back to sequential execution when not supported.
+- Cross-role suggestions, concerns, questions, and conflicts return to CEO adjudication.
 - Durable task completion is checked by the final validation checklist.
 - These pressure scenarios still map to explicit instructions in the skill.

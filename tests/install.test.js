@@ -51,6 +51,10 @@ test("copySkill installs required skill files and references", () => {
     true,
   );
   assert.equal(
+    fs.existsSync(path.join(destination, "references", "delivery-discipline.md")),
+    true,
+  );
+  assert.equal(
     fs.existsSync(path.join(destination, "tests", "pressure-scenarios.md")),
     true,
   );
