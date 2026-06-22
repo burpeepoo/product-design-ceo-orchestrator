@@ -24,7 +24,8 @@ Role selection rules:
 - If a role depends on missing evidence, record the gap instead of inventing the role's findings.
 - Before each role executes, record portable skill trigger categories and a skill decision.
 - After first-pass outputs, selected roles should challenge each other only where their boundaries materially overlap on the same decision node.
-- Role outputs must return to CEO / Manager final integration; separated role notes are not a final answer.
+- Role outputs must summarize back into the unified role contribution ledger before CEO / Manager final integration.
+- Role outputs must return to CEO / Manager final integration; separated role notes or per-role files are not a final answer.
 
 ## Portable Skill Trigger Categories
 
@@ -89,6 +90,23 @@ artifact_format:
 output_path:
 ```
 
+Role contribution ledger entry:
+
+```text
+role:
+task:
+why_selected:
+key_inputs:
+key_outputs:
+decisions_influenced:
+evidence_used:
+risks_or_gaps:
+final_artifact_impact:
+status:
+```
+
+Use one unified ledger for the run. Per-role files are optional supporting details for complex work and must roll up into the ledger.
+
 ## CEO / Manager
 
 Owns orchestration, scope, priorities, tradeoffs, dependencies, and final synthesis.
@@ -100,6 +118,7 @@ Inputs:
 
 Outputs:
 - orchestration plan
+- unified role contribution ledger
 - cross-role adjudication
 - final integrated artifact
 - risks and next steps

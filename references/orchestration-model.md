@@ -48,9 +48,10 @@ Recommended phases:
 1. understand
 2. define
 3. first-pass role outputs
-4. light cross-role review when role perspectives interact
-5. CEO adjudication and final synthesis
-6. validation
+4. update the unified role contribution ledger
+5. light cross-role review when role perspectives interact
+6. CEO adjudication and final synthesis
+7. validation
 
 Use light workspace by default and produce one knowledge-base-ready artifact plus an artifact index. Do not create role files unless the task grows into complex work.
 
@@ -71,11 +72,12 @@ Default phases:
 1. Understand problem: user, scenario, market, competitor, constraints.
 2. Define product: goals, scope, requirements, acceptance criteria.
 3. First-pass role outputs: role-specific findings and proposals.
-4. Review relevance gate: decide whether cross-role review is none, targeted, or full based on shared decision nodes.
-5. Cross-role review: decision-driven suggestions, concerns, questions, and conflicts.
-6. CEO adjudication: accepted, rejected, and deferred role feedback.
-7. Final artifact revision: IA, flow, UI, prototype, PRD, demo, or artifact.
-8. Validation and final integration: one CEO-readable final result and paths.
+4. Role contribution ledger: record each selected role's task, key output, evidence, and final artifact impact.
+5. Review relevance gate: decide whether cross-role review is none, targeted, or full based on shared decision nodes.
+6. Cross-role review: decision-driven suggestions, concerns, questions, and conflicts.
+7. CEO adjudication: accepted, rejected, and deferred role feedback.
+8. Final artifact revision: IA, flow, UI, prototype, PRD, demo, or artifact.
+9. Validation and final integration: one reader-facing result plus process appendix and paths.
 
 ## Split Rules
 
@@ -151,6 +153,29 @@ For medium and complex work, each role task records portable skill-routing decis
 
 Use runtime skill discovery when available. Do not assume a specific skill name exists on every machine. If a matching skill is unavailable, continue with the role boundary and record the gap.
 
+## Role Contribution Ledger
+
+For durable medium and complex work, keep one unified run-level record of selected role contributions. This ledger answers: which roles were used, why each role was selected, what each role produced, and how that work changed the final artifact.
+
+Use this shape:
+
+- role
+- task
+- why selected
+- key inputs
+- key outputs
+- decisions influenced
+- evidence used
+- risks or gaps
+- final artifact impact
+- status
+
+Medium work should default to one `role-contributions.md` supporting artifact when role work is used. A process appendix `role_contributions` section is acceptable only when the task is very light or the appendix is already the only saved process record. Do not create per-role files by default.
+
+Complex work requires the unified ledger when roles are selected. Per-role files are optional working details for substantial independent role work; they must link back to or summarize into the unified ledger.
+
+The reader-facing artifact should not be organized around the full role ledger. Keep the ledger in the process appendix or supporting layer unless a concise role summary helps the reader trust the recommendation.
+
 ## Delivery Discipline
 
 For medium and complex work, record these before execution:
@@ -224,6 +249,23 @@ Durable work cannot be marked complete while collaboration status is unclear.
 - `needs_follow_up`: close only when owner, trigger, next action, affected artifact or decision, and required/optional status are recorded.
 - Final integration must include the disposition of blocked, review, and follow-up items.
 
+## Final Artifact Readability
+
+Final integration produces two layers:
+
+```text
+reader_artifact:
+process_appendix:
+```
+
+`reader_artifact` is written for a busy product or design lead. It should lead with the recommendation, then explain why, the plan or solution, risks, and next steps. Use natural headings in the user's language.
+
+`process_appendix` preserves the evidence trail: assumptions, role outputs, handoffs, review relevance, CEO adjudication, validation, risks, unresolved items, and output paths.
+
+Keep both layers in one artifact by default, with `reader_artifact` first. Split them into separate files only when the artifact is large, the format benefits from separation, or the user asks.
+
+Do not use internal process fields as the main reader-facing outline. Process fields belong in `process_appendix` unless the reader explicitly needs them to make the decision.
+
 ## Required CEO Decisions
 
 Before executing, produce:
@@ -237,8 +279,11 @@ Before executing, produce:
 - workspace mode and directory plan
 - output artifacts
 - artifact format decisions
+- final artifact layer decision: combined or separate `reader_artifact` and `process_appendix`
 - role skill-routing decisions
 - role or subagent handoff blocks
+- role contribution ledger location
+- per-role file decision: none / supporting details only
 - blocked, review, and follow-up exit conditions
 - success criteria
 - evidence needed
@@ -254,7 +299,7 @@ Keep the first response proportional to the task:
 
 - Simple: one sentence explaining direct handling, then answer.
 - Medium: one short paragraph naming roles, KB status, skill-routing approach, review depth, artifact format, and expected artifact path.
-- Complex: a concise plan with roles, phases, workspace mode, KB status, skill-routing approach, review depth, artifact formats, and final integration criteria.
+- Complex: a concise plan with roles, phases, workspace mode, KB status, skill-routing approach, review depth, artifact formats, final artifact layers, and final integration criteria.
 
 Write the first response and all user-facing artifact content in the user's current language unless the user asks for another language.
 

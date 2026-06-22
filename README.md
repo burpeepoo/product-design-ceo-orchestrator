@@ -9,8 +9,10 @@ The skill helps an agent decide when to answer directly, when to use a few produ
 - correct scope before execution
 - correctness, evidence, and long-term maintainability over fastest possible output
 - user-facing artifacts that follow the user's current language
+- reader-facing final summaries that do not read like process logs
 - the lightest useful workflow
 - explicit role selection
+- a unified role contribution ledger for selected role work
 - subagent orchestration when the runtime supports it and role tasks are independent
 - structured handoff contracts for role and subagent work
 - portable role-level skill routing
@@ -195,6 +197,12 @@ output_path:
 
 The skill uses trigger categories rather than hardcoded local skill names. For example, Market Analyst may look for competitor research, market scan, web evidence, or positioning skills; Product Designer may look for UX review, IA, interaction design, prototype, or UI demo skills. If the runtime does not provide a matching skill, the role records `unavailable` and continues.
 
+## Role Contribution Ledger
+
+For durable medium and complex tasks, selected role work is summarized into one unified role contribution ledger. It records each role's task, why it was selected, key inputs, key outputs, decisions influenced, evidence used, risks or gaps, final artifact impact, and status.
+
+Medium tasks default to one concise `role-contributions.md` supporting artifact when role work is used; very light tasks may keep the ledger as a process appendix section instead. Complex tasks may add per-role files only when a role has substantial independent work; those files support the unified ledger instead of replacing it. The final reader-facing artifact should stay focused on the recommendation, not the full role ledger.
+
 ## Subagent Execution
 
 For medium and complex tasks, the skill records whether the runtime supports subagent orchestration. If supported and role tasks are independent, those tasks are assigned to subagents with explicit context, evidence requirements, expected output, artifact format, and return path.
@@ -223,6 +231,10 @@ This skill optimizes for correctness, evidence, and maintainability. It does not
 
 When selected roles materially affect the same product decision, their first-pass outputs pass through a Review Relevance Gate. The gate records `none`, `targeted`, or `full` review based on concrete decision nodes. Roles review only the decisions they can materially challenge; CEO / Manager then adjudicates accepted, rejected, and deferred feedback before the final artifact is revised.
 
+## Reader-Facing Final Artifacts
+
+Final CEO summaries are written first for a busy product or design lead. The reader-facing artifact leads with recommendation, rationale, plan, risks, and next steps. Process-heavy evidence, role outputs, handoffs, review relevance, adjudication, and validation details are preserved in a `process_appendix` or equivalent supporting layer.
+
 ## Knowledge Artifacts
 
 Medium and complex tasks default to a saveable artifact suitable for a knowledge base. The artifact does not have to be Markdown:
@@ -242,10 +254,12 @@ The skill includes pressure scenarios in `tests/pressure-scenarios.md`. Use them
 - avoids over-orchestration
 - keeps saved artifacts in the user's language
 - uses role perspectives only when they add distinct value
+- records selected role contributions in one unified ledger when role work is used
 - uses subagents for independent role tasks when supported, with sequential fallback when unsupported
 - uses structured handoff contracts for role and subagent tasks
 - closes blocked, review, and follow-up states before claiming durable work is complete
 - drives cross-role review from concrete decision nodes instead of role count alone
+- keeps final CEO summaries readable by separating `reader_artifact` from `process_appendix`
 - routes role tasks to portable skill triggers when useful
 - applies delivery discipline gates for durable medium/complex work
 - uses cross-role collaboration and CEO adjudication when role perspectives interact
@@ -268,7 +282,7 @@ test -s references/role-catalog.md
 test -s references/workspace-structure.md
 test -s references/kb-policy.md
 test -s tests/pressure-scenarios.md
-rg -n "description: Use when|Output Language Contract|Subagent Execution Mode|Delivery Discipline Gates|Review Relevance Gate|Cross-Role Collaboration Loop|Role Selection Matrix|Workspace Modes|Pressure Scenarios" .
+rg -n "description: Use when|Output Language Contract|CEO Summary Readability Contract|Role Contribution Ledger|Subagent Execution Mode|Delivery Discipline Gates|Review Relevance Gate|Cross-Role Collaboration Loop|Role Selection Matrix|Workspace Modes|Pressure Scenarios" .
 ```
 
 ## Publishing Workflow

@@ -99,6 +99,45 @@ test("skill documents decision-driven cross-role review", () => {
   assert.match(scenarios, /Cross-Role Review Must Be Decision-Driven/);
 });
 
+test("skill documents readable final artifacts", () => {
+  const packageRoot = path.resolve(__dirname, "..");
+  const skill = fs.readFileSync(path.join(packageRoot, "SKILL.md"), "utf8");
+  const workspace = fs.readFileSync(
+    path.join(packageRoot, "references", "workspace-structure.md"),
+    "utf8",
+  );
+  const scenarios = fs.readFileSync(
+    path.join(packageRoot, "tests", "pressure-scenarios.md"),
+    "utf8",
+  );
+
+  assert.match(skill, /CEO Summary Readability Contract/);
+  assert.match(skill, /reader_artifact/);
+  assert.match(skill, /process_appendix/);
+  assert.match(workspace, /reader_artifact/);
+  assert.match(workspace, /process_appendix/);
+  assert.match(scenarios, /Final CEO Summary Must Be Reader-Facing/);
+});
+
+test("skill documents unified role contribution ledger", () => {
+  const packageRoot = path.resolve(__dirname, "..");
+  const skill = fs.readFileSync(path.join(packageRoot, "SKILL.md"), "utf8");
+  const workspace = fs.readFileSync(
+    path.join(packageRoot, "references", "workspace-structure.md"),
+    "utf8",
+  );
+  const scenarios = fs.readFileSync(
+    path.join(packageRoot, "tests", "pressure-scenarios.md"),
+    "utf8",
+  );
+
+  assert.match(skill, /Role Contribution Ledger/);
+  assert.match(skill, /role_contributions/);
+  assert.match(skill, /final_artifact_impact/);
+  assert.match(workspace, /role-contributions\.md/);
+  assert.match(scenarios, /Role Contributions Need A Unified Ledger/);
+});
+
 test("AI target map documents supported explicit runtimes", () => {
   assert.deepEqual(Object.keys(AI_TARGETS).sort(), [
     "claude",

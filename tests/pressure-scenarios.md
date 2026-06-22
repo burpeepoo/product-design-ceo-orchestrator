@@ -17,10 +17,12 @@ An agent using this skill should:
 - create structured handoff blocks for role or subagent tasks before delegation
 - close blocked, review, and follow-up statuses with explicit exit conditions before final completion
 - write user-facing responses, saved artifacts, Markdown files, role outputs, plans, and indexes in the user's current language unless the user requests another language
+- record selected roles, role tasks, key outputs, and final artifact impact in one unified role contribution ledger when role work is used
 - define success criteria, evidence needs, review plan, and validation plan before durable work
 - use cross-role review when selected role perspectives can improve or challenge each other
 - drive cross-role review from shared decision nodes rather than from role count alone
 - show CEO adjudication for accepted, rejected, or deferred role suggestions
+- keep final CEO summaries reader-facing, with process details separated from the main recommendation
 - finish durable medium/complex work with a knowledge-base-ready artifact and explicit risks
 
 ## Scenario 1: Tiny Copy Fix Under Process Temptation
@@ -461,6 +463,52 @@ Expected behavior:
 Failure this prevents:
 - Running role-by-role review as a ritual when no final decision or artifact section would change.
 
+## Scenario 23: Final CEO Summary Must Be Reader-Facing
+
+User request:
+
+> 帮我优化现有设置页，最后输出一个中文 md，给产品和设计负责人评审。
+
+Pressures:
+- The task requires role work, evidence, review, handoff, validation, and decision nodes.
+- The agent may make internal process fields the main Markdown structure.
+- The final artifact needs to be read, forwarded, and used for decision-making.
+
+Expected behavior:
+- The final Markdown starts with a `reader_artifact` layer written for a busy product/design lead.
+- The reader-facing body uses natural Chinese headings such as recommendation, why, plan, risks, and next steps.
+- The main body does not use internal schema names such as `role`, `handoff`, `validation`, or `decision_nodes` as primary headings.
+- The recommendation appears before process details.
+- Each major reader-facing section helps the reader make or understand a decision.
+- Evidence, assumptions, role outputs, handoffs, review relevance, CEO adjudication, validation, unresolved items, and output paths are moved into a `process_appendix` layer.
+
+Failure this prevents:
+- Producing a final CEO summary that reads like an agent process log instead of a product decision document.
+
+## Scenario 24: Role Contributions Need A Unified Ledger
+
+User request:
+
+> 做一个设置页优化方案，使用必要角色，但我希望之后能看清每个角色到底贡献了什么。
+
+Pressures:
+- The task may select Product Designer, Requirements Specialist, QA / Acceptance Specialist, and possibly Tech Lead.
+- The agent may scatter role outputs across the final Markdown, process notes, and optional per-role files.
+- Per-role files can hide the CEO-level record of which roles actually changed the final decision.
+
+Expected behavior:
+- Classify as medium unless the request grows into a complex audit.
+- Do not create a ledger for simple tasks unless the user asks for a saved process record.
+- For medium/light work, default to one `role-contributions.md` when role work is used; use a `role_contributions` section in `process_appendix` only when that is the simpler saved process record.
+- For complex/full work, require the unified role contribution ledger and create per-role files only for substantial independent details.
+- Record each selected role with `role`, `task`, `why_selected`, `key_inputs`, `key_outputs`, `decisions_influenced`, `evidence_used`, `risks_or_gaps`, `final_artifact_impact`, and `status`.
+- Keep the final reader artifact focused on the recommendation; put the full role ledger in the process appendix or supporting artifact.
+- If per-role files exist, they must summarize or link back to the unified ledger.
+- If a role has `no material impact`, record that and avoid keeping similar fake role work next time.
+
+Failure this prevents:
+- Losing role contributions across scattered notes, bloating the reader artifact with process fields, or ending without a single source of truth for role impact.
+
 ## Manual Verification Checklist
 
 Before deploying edits to this skill, confirm:
@@ -479,11 +527,15 @@ Before deploying edits to this skill, confirm:
 - Medium and complex tasks default to knowledge-base-ready artifacts without forcing Markdown.
 - Durable artifacts preserve the user's language unless another language is explicitly requested.
 - Role tasks include portable skill trigger routing and visible skill decisions.
+- Selected role contributions are recorded in one unified ledger with final artifact impact.
+- Per-role files, when present, support the unified ledger instead of replacing it.
 - Independent role tasks use subagents when supported and fall back to sequential execution when not supported.
 - Role or subagent delegation includes a structured handoff block and return contract.
 - Blocked, review, and follow-up statuses have explicit owners, exit conditions, and final disposition.
 - Cross-role review uses a review relevance gate and decision nodes rather than role count alone.
 - Review items identify target decisions, challenge type, expected impact, and whether CEO adjudication is required.
 - Cross-role suggestions, concerns, questions, and conflicts return to CEO adjudication.
+- Final CEO summaries use a reader-facing body before process details.
+- Process-heavy role, handoff, evidence, review, and validation details live in a process appendix or equivalent supporting layer.
 - Durable task completion is checked by the final validation checklist.
 - These pressure scenarios still map to explicit instructions in the skill.

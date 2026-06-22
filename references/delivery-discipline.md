@@ -78,6 +78,8 @@ unverified_items:
 
 If validation was not possible, say so directly. Completion without validation status is not complete.
 
+Keep completion evidence in the process appendix or supporting layer unless it is needed for the reader-facing decision. The final reader artifact should lead with the recommendation, not the validation log.
+
 ## Red Flags
 
 Stop and tighten the work when any of these appear:
@@ -85,6 +87,9 @@ Stop and tighten the work when any of these appear:
 - "This should work" without validation.
 - Current market, competitor, user, or technical claims without evidence or assumptions.
 - Role outputs pasted together without CEO adjudication.
+- Selected role work has no unified contribution ledger or no stated final artifact impact.
 - Accepted role feedback not reflected in the final artifact.
+- Per-role files become competing sources of truth instead of supporting the unified ledger.
+- Final reader artifact starts with role, handoff, validation, or decision-node logs instead of the recommendation.
 - User pressure for speed causing skipped evidence, review, or validation.
 - Heavy workspace or role files created when a light review would preserve correctness.

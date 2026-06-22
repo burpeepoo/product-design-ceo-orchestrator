@@ -12,7 +12,7 @@ Act as the smallest useful product leadership system before acting as an individ
 1. Respond in the language the user is using unless they ask otherwise.
 2. Classify the request before doing product work: simple, medium, or complex.
 3. State the orchestration decision briefly using the first response templates below.
-4. If durable, plan roles, phases, KB needs, workspace mode, delivery discipline gates, skill routing, collaboration review, and final knowledge artifact before executing.
+4. If durable, plan roles, phases, KB needs, workspace mode, delivery discipline gates, skill routing, role contribution ledger, collaboration review, and final knowledge artifact before executing.
 5. If the runtime supports subagent orchestration and role tasks are independent, assign those role tasks to subagents. If subagents are unavailable, blocked, unsafe, or tasks are dependent, execute sequentially and record the fallback reason.
 
 ## Output Language Contract
@@ -76,6 +76,41 @@ Artifact format is chosen by the agent based on the work:
 
 Only force Markdown, HTML, spreadsheet, or another format when the user asks for that format. Otherwise choose the format that makes the artifact easiest to review, reuse, and maintain.
 
+## CEO Summary Readability Contract
+
+Final CEO summaries must read like product decision documents, not agent process logs. The default reader is a busy product or design lead who needs to understand the recommendation, tradeoffs, and next action quickly.
+
+For every durable final artifact, write the reader-facing body before process details:
+
+1. Recommendation: what should be done.
+2. Why: the main rationale and evidence that matters for the decision.
+3. Plan or solution: what changes, how it works, and what scope is included.
+4. Risks: what could be wrong, costly, or unverified.
+5. Next steps: what the team should do next.
+
+Use natural headings in the user's language. Prefer headings such as "推荐方案", "为什么这样做", "具体方案", "需要注意的风险", and "下一步" for Chinese outputs. Do not use internal schema names as primary reader-facing headings.
+
+Do not make these process fields the main document structure: `role`, `handoff`, `validation`, `decision_nodes`, `cross_role_review_decision`, `skill_decision`, `evidence_requirement`, `artifact_format`, or `output_path`.
+
+Each major reader-facing section should help the reader make or understand a decision. If a section only records agent process, move it to the process appendix.
+
+## Final Artifact Two-Layer Structure
+
+Durable final artifacts should separate the human decision layer from the process evidence layer:
+
+```text
+reader_artifact:
+process_appendix:
+```
+
+`reader_artifact` is the human-readable decision artifact for reading, forwarding, and decision-making. It contains the recommendation, rationale, solution, risks, and next steps in natural language.
+
+`process_appendix` preserves evidence, assumptions, role outputs, role contribution ledger, handoffs, review relevance, CEO adjudication, validation, risks, unresolved items, and output paths for review, audit, continuation, and knowledge-base maintenance.
+
+Default to one combined artifact with a reader-facing body first and a process appendix after it. Split `reader_artifact` and `process_appendix` into separate files only when the artifact is large, when the selected format makes separate files clearer, or when the user asks for separate files.
+
+Both layers must follow the user's current language unless another language is requested. Portable schema keys may appear in `process_appendix`, but their values and explanations still follow the user's language.
+
 ## Delivery Discipline Gates
 
 For medium and complex tasks, define correctness before producing the durable artifact. Keep this lightweight, but make it explicit.
@@ -129,6 +164,36 @@ output_path:
 Use another skill when the role task has a distinct method, evidence requirement, or artifact format that a more specific skill can improve. If no matching skill exists in the runtime, record `unavailable` and continue with the role boundary. If no extra skill adds value, record `not_needed`.
 
 All role outputs must return to CEO / Manager final integration. Do not leave separated role notes as the final result.
+
+## Role Contribution Ledger
+
+For durable medium and complex tasks that use role perspectives beyond a single manager answer, keep one unified role contribution ledger. The ledger is the run-level source of truth for which roles were used, what each role did, what each role contributed, and how that contribution changed the final artifact.
+
+Simple tasks do not need a role contribution ledger unless the user asks for a saved process record.
+
+Medium and light workspace tasks should default to one concise `role-contributions.md` supporting artifact when role work is used. If the task is very light or the process appendix is already the only saved process record, a `role_contributions` section in the `process_appendix` is acceptable. Do not create one file per role by default.
+
+Complex and full workspace tasks require the unified ledger when roles are selected. Per-role files are allowed only when a role has substantial independent working material, evidence, or draft output. Those files support the ledger; they do not replace it.
+
+Record each selected role in this shape:
+
+```text
+role_contributions:
+  - role:
+    task:
+    why_selected:
+    key_inputs:
+    key_outputs:
+    decisions_influenced:
+    evidence_used:
+    risks_or_gaps:
+    final_artifact_impact:
+    status:
+```
+
+`final_artifact_impact` must state how the role changed the reader artifact, process appendix, decision log, artifact index, or follow-up list. If the role had no material effect, record `no material impact` and consider removing that role in future similar tasks.
+
+Keep the full role contribution ledger in `process_appendix` or a supporting artifact. The `reader_artifact` may summarize the roles only when that helps the reader trust or act on the recommendation.
 
 ## Subagent Execution Mode
 
@@ -370,9 +435,9 @@ Likely future split candidates are competitor research, UI demo orchestration, P
    - missing inputs, if any
 3. Choose workspace mode from `references/workspace-structure.md`: none / light / full.
 4. Choose roles from `references/role-catalog.md`; create role boundary files only for selected roles in full workspace mode.
-5. For medium work, keep the orchestration plan, delivery gates, execution mode, role handoffs, role skill-routing decisions, review relevance decision, status exit conditions, and artifact path in the response or light-mode `artifact-index.md`. For complex work, create `orchestration-plan.md` with phases, tasks, dependencies, subagent capability, execution mode, role handoffs, role skill-routing decisions, delivery gates, review relevance gate, decision nodes, status exit conditions, artifact formats, expected outputs, and final synthesis criteria.
-6. Execute in order: understand -> define -> first-pass role outputs -> cross-role review when useful -> CEO adjudication -> design or write revision -> validation -> final integration.
-7. Save durable final output to the selected output path and record it in the artifact index. In full workspace mode, put final artifacts under `outputs/` and choose the best format for each artifact.
+5. For medium work, keep the orchestration plan, delivery gates, execution mode, role handoffs, role skill-routing decisions, role contribution ledger decision, review relevance decision, status exit conditions, final artifact layer decision, and artifact path in the response or light-mode `artifact-index.md`. For complex work, create `orchestration-plan.md` with phases, tasks, dependencies, subagent capability, execution mode, role handoffs, role skill-routing decisions, role contribution ledger location, delivery gates, review relevance gate, decision nodes, status exit conditions, artifact formats, final artifact layers, expected outputs, and final synthesis criteria.
+6. Execute in order: understand -> define -> first-pass role outputs -> update role contribution ledger -> cross-role review when useful -> CEO adjudication -> design or write revision -> validation -> reader-facing final integration -> process appendix.
+7. Save durable final output to the selected output path and record it in the artifact index. In full workspace mode, put final artifacts under `outputs/` and choose the best format for each artifact. The final output must identify the `reader_artifact`, `process_appendix`, and role contribution ledger location, even when they live in the same file.
 8. Update `reflections.md` only for durable tasks where reusable lessons or follow-ups emerged.
 
 ## References
@@ -395,11 +460,14 @@ Every durable task must end with:
 - role or subagent handoff blocks and return contracts
 - success criteria, evidence needed, review plan, and validation plan for medium/complex work
 - role skill-routing decisions
+- role contribution ledger or the reason it was not needed
 - review relevance decision and decision nodes before cross-role review
 - cross-role review and CEO adjudication when multiple role perspectives materially interact with the same decision
 - status disposition for blocked, review, and follow-up items
 - KB used or requested
-- final artifact summary
+- final artifact layer decision: combined artifact or separate `reader_artifact` and `process_appendix`
+- reader-facing final artifact summary
+- process appendix summary
 - artifact format and why it was chosen
 - output paths, or an explicit note that no files were created
 - validation performed, evidence collected, known risks, and unverified items
@@ -417,6 +485,9 @@ Before claiming a durable task is complete, verify:
 - Role or subagent work has structured handoff blocks and return contracts before delegation.
 - Medium/complex work records success criteria, evidence needs, review plan, and validation plan.
 - Role tasks record skill triggers, decisions, evidence requirements, artifact format, and output paths.
+- Selected roles have a unified role contribution ledger with tasks, key inputs, key outputs, decisions influenced, evidence used, risks or gaps, final artifact impact, and status.
+- The role contribution ledger lives in `process_appendix` or a supporting artifact, not as the main reader-facing structure.
+- Per-role files, if any, support the unified ledger instead of becoming separate sources of truth.
 - Facts, assumptions, recommendations, and evidence gaps are separated.
 - Current market or competitor claims are backed by browsing or user-provided sources.
 - Cross-role review is driven by decision nodes rather than role count alone.
@@ -424,6 +495,10 @@ Before claiming a durable task is complete, verify:
 - Cross-role review happened when selected roles materially affected the same decision, or the reason for skipping it is explicit.
 - CEO / Manager adjudicated accepted, rejected, and deferred role suggestions before final integration.
 - Blocked, in-review, and follow-up items have owners, exit conditions, and final dispositions.
+- The final artifact starts with a readable `reader_artifact` layer for a busy product or design lead.
+- Process-heavy fields, role notes, handoffs, validation, review relevance, and evidence details are in `process_appendix` or an equivalent supporting layer.
+- Reader-facing headings are natural language and do not expose internal schema fields as the main document structure.
+- Each major reader-facing section supports a decision.
 - Final artifact reflects the adjudication instead of leaving role feedback as loose notes.
 - The final integration resolves conflicts between role outputs instead of pasting them together.
 - Medium/complex work has a knowledge-base-ready artifact unless the user explicitly asked not to create one.
