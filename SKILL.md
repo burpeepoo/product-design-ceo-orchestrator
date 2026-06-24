@@ -30,6 +30,12 @@ English schema keys such as `role`, `task`, `artifact_format`, or `validation_pe
 
 Do not let English templates, English role names, source document language, or local skill wording override the user's requested language.
 
+Before saving or returning a durable artifact, perform a language consistency pass:
+- Determine `artifact_language` from the user's request and current conversation.
+- Check headings, narrative, recommendations, risks, follow-ups, tables, and validation summaries against that language.
+- Rewrite stray English template text, role labels, and section headings into the artifact language unless they are portable schema keys, code identifiers, quoted source text, product names, or file paths.
+- Treat a mixed-language artifact as incomplete. A Chinese artifact with a Chinese opening section and English body sections must be rewritten before delivery.
+
 ## Quick Decision Table
 
 | Request shape | Classification | Workspace | Roles | First action | Final output |
@@ -76,9 +82,11 @@ Artifact format is chosen by the agent based on the work:
 
 Only force Markdown, HTML, spreadsheet, or another format when the user asks for that format. Otherwise choose the format that makes the artifact easiest to review, reuse, and maintain.
 
-## CEO Summary Readability Contract
+## Reader-Facing Decision Artifact Contract
 
-Final CEO summaries must read like product decision documents, not agent process logs. The default reader is a busy product or design lead who needs to understand the recommendation, tradeoffs, and next action quickly.
+Final reader-facing artifacts must read like product decision documents, not agent process logs or CEO-branded status updates. The default reader is a busy product or design lead who needs to understand the recommendation, tradeoffs, and next action quickly.
+
+CEO / Manager is an internal orchestration hat for selecting roles, routing work, resolving conflicts, and integrating decisions. It is not the default title, heading, or brand for the user's deliverable.
 
 For every durable final artifact, write the reader-facing body before process details:
 
@@ -89,6 +97,8 @@ For every durable final artifact, write the reader-facing body before process de
 5. Next steps: what the team should do next.
 
 Use natural headings in the user's language. Prefer headings such as "推荐方案", "为什么这样做", "具体方案", "需要注意的风险", and "下一步" for Chinese outputs. Do not use internal schema names as primary reader-facing headings.
+
+Do not default to reader-facing headings such as "CEO结论", "CEO Summary", "CEO Brief", or "CEO Recommendation" unless the user explicitly asks for a CEO-labeled deliverable or the literal audience is a CEO.
 
 Do not make these process fields the main document structure: `role`, `handoff`, `validation`, `decision_nodes`, `cross_role_review_decision`, `skill_decision`, `evidence_requirement`, `artifact_format`, or `output_path`.
 
@@ -479,6 +489,7 @@ Before claiming a durable task is complete, verify:
 
 - User goal is restated and the final artifact answers it.
 - User-facing responses and saved artifacts use the user's current language unless another language was requested.
+- Durable artifacts passed a language consistency pass; no mixed-language artifact is delivered except for schema keys, code identifiers, quoted source text, product names, and file paths.
 - Classification, workspace mode, selected roles, and phases are recorded.
 - Subagent capability and execution mode are recorded for medium/complex work.
 - Independent role tasks used subagents when supported; otherwise the fallback reason is explicit.
@@ -498,6 +509,7 @@ Before claiming a durable task is complete, verify:
 - The final artifact starts with a readable `reader_artifact` layer for a busy product or design lead.
 - Process-heavy fields, role notes, handoffs, validation, review relevance, and evidence details are in `process_appendix` or an equivalent supporting layer.
 - Reader-facing headings are natural language and do not expose internal schema fields as the main document structure.
+- Reader-facing headings do not default to "CEO结论", "CEO Summary", "CEO Brief", or similar internal-orchestration labels.
 - Each major reader-facing section supports a decision.
 - Final artifact reflects the adjudication instead of leaving role feedback as loose notes.
 - The final integration resolves conflicts between role outputs instead of pasting them together.

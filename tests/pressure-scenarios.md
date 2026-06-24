@@ -22,7 +22,7 @@ An agent using this skill should:
 - use cross-role review when selected role perspectives can improve or challenge each other
 - drive cross-role review from shared decision nodes rather than from role count alone
 - show CEO adjudication for accepted, rejected, or deferred role suggestions
-- keep final CEO summaries reader-facing, with process details separated from the main recommendation
+- keep final reader-facing artifacts decision-oriented, with process details separated from the main recommendation
 - finish durable medium/complex work with a knowledge-base-ready artifact and explicit risks
 
 ## Scenario 1: Tiny Copy Fix Under Process Temptation
@@ -152,7 +152,7 @@ User request:
 Pressures:
 - Role outputs may disagree.
 - Copy-pasting all notes feels complete.
-- The user needs a CEO-readable decision.
+- The user needs a reader-facing decision.
 
 Expected behavior:
 - Create a final integration phase.
@@ -170,7 +170,7 @@ User request:
 > Compare three competitors and turn the findings into a product recommendation.
 
 Pressures:
-- The CEO has already selected Market Analyst.
+- The orchestrator has already selected Market Analyst.
 - The runtime may or may not have a concrete competitor-analysis skill installed.
 - The agent may skip skill selection and just write from memory.
 
@@ -179,7 +179,7 @@ Expected behavior:
 - Include recommended skill triggers such as market research, competitor research, web evidence, and positioning.
 - Record the skill decision as used, unavailable, or not needed.
 - Record evidence requirement and artifact format before executing.
-- Return role output to CEO final integration.
+- Return role output to final integration.
 
 Failure this prevents:
 - Role work bypassing available skills or leaving skill choice invisible.
@@ -397,9 +397,15 @@ Expected behavior:
 - Write the saved Markdown artifact's headings, narrative, recommendations, risks, and follow-ups in Chinese.
 - Keep only portable schema field keys in English when useful, but write field values and user-facing explanations in Chinese.
 - Do not let English templates, role names, or source material language override the user's requested language.
+- Perform a language consistency pass before saving or returning the artifact.
 
 Failure this prevents:
 - Producing an English Markdown artifact for a Chinese conversation.
+- Producing a mixed-language artifact where the opening section is Chinese but later headings, recommendations, risks, or follow-ups remain English.
+
+### Mixed-Language Artifact Must Be Rewritten
+
+If a durable Chinese artifact starts with a Chinese summary but later uses English section headings such as `Recommendation`, `Why`, `Risks`, `Next steps`, or English role labels as reader-facing prose, rewrite those parts before delivery. Only portable schema keys, code identifiers, quoted source text, product names, and file paths may stay in English.
 
 ## Scenario 20: Subagent Handoff Needs A Return Contract
 
@@ -463,7 +469,7 @@ Expected behavior:
 Failure this prevents:
 - Running role-by-role review as a ritual when no final decision or artifact section would change.
 
-## Scenario 23: Final CEO Summary Must Be Reader-Facing
+## Scenario 23: Reader-Facing Artifact Must Not Look Like A CEO Log
 
 User request:
 
@@ -476,14 +482,15 @@ Pressures:
 
 Expected behavior:
 - The final Markdown starts with a `reader_artifact` layer written for a busy product/design lead.
-- The reader-facing body uses natural Chinese headings such as recommendation, why, plan, risks, and next steps.
+- The reader-facing body uses natural Chinese headings such as "推荐方案", "为什么这样做", "具体方案", "需要注意的风险", and "下一步".
+- The first reader-facing section is not titled "CEO结论", "CEO Summary", "CEO Brief", or another internal-orchestration label unless the user explicitly asked for that label.
 - The main body does not use internal schema names such as `role`, `handoff`, `validation`, or `decision_nodes` as primary headings.
 - The recommendation appears before process details.
 - Each major reader-facing section helps the reader make or understand a decision.
 - Evidence, assumptions, role outputs, handoffs, review relevance, CEO adjudication, validation, unresolved items, and output paths are moved into a `process_appendix` layer.
 
 Failure this prevents:
-- Producing a final CEO summary that reads like an agent process log instead of a product decision document.
+- Producing a final reader artifact that reads like an agent process log or a CEO-labeled internal status memo instead of a product decision document.
 
 ## Scenario 24: Role Contributions Need A Unified Ledger
 
@@ -535,7 +542,7 @@ Before deploying edits to this skill, confirm:
 - Cross-role review uses a review relevance gate and decision nodes rather than role count alone.
 - Review items identify target decisions, challenge type, expected impact, and whether CEO adjudication is required.
 - Cross-role suggestions, concerns, questions, and conflicts return to CEO adjudication.
-- Final CEO summaries use a reader-facing body before process details.
+- Final reader artifacts use a reader-facing body before process details.
 - Process-heavy role, handoff, evidence, review, and validation details live in a process appendix or equivalent supporting layer.
 - Durable task completion is checked by the final validation checklist.
 - These pressure scenarios still map to explicit instructions in the skill.

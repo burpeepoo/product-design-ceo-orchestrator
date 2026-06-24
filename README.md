@@ -221,6 +221,8 @@ The skill writes chat responses and user-facing saved artifacts in the user's cu
 
 Portable schema keys may remain in English, but headings, narrative, recommendations, risks, and follow-ups should follow the user's language.
 
+Before saving or returning a durable artifact, the skill performs a language consistency pass. A mixed-language artifact is incomplete when, for example, a Chinese opening section is followed by English reader-facing headings, recommendations, risks, or next steps.
+
 ## Delivery Discipline
 
 Medium and complex tasks define success criteria, evidence needs, review plan, and validation plan before execution. Before claiming durable work is complete, the final output records validation performed, evidence collected, known risks, and unverified items.
@@ -233,7 +235,9 @@ When selected roles materially affect the same product decision, their first-pas
 
 ## Reader-Facing Final Artifacts
 
-Final CEO summaries are written first for a busy product or design lead. The reader-facing artifact leads with recommendation, rationale, plan, risks, and next steps. Process-heavy evidence, role outputs, handoffs, review relevance, adjudication, and validation details are preserved in a `process_appendix` or equivalent supporting layer.
+Final reader-facing artifacts are written first for a busy product or design lead. The reader-facing artifact leads with recommendation, rationale, plan, risks, and next steps. Process-heavy evidence, role outputs, handoffs, review relevance, adjudication, and validation details are preserved in a `process_appendix` or equivalent supporting layer.
+
+CEO / Manager remains an internal orchestration hat for role selection, conflict resolution, and final integration. The user's deliverable should not default to titles such as "CEO结论", "CEO Summary", or "CEO Brief" unless the user explicitly requests that framing or the literal audience is a CEO.
 
 ## Knowledge Artifacts
 
@@ -259,7 +263,7 @@ The skill includes pressure scenarios in `tests/pressure-scenarios.md`. Use them
 - uses structured handoff contracts for role and subagent tasks
 - closes blocked, review, and follow-up states before claiming durable work is complete
 - drives cross-role review from concrete decision nodes instead of role count alone
-- keeps final CEO summaries readable by separating `reader_artifact` from `process_appendix`
+- keeps final reader artifacts readable by separating `reader_artifact` from `process_appendix`
 - routes role tasks to portable skill triggers when useful
 - applies delivery discipline gates for durable medium/complex work
 - uses cross-role collaboration and CEO adjudication when role perspectives interact
@@ -282,7 +286,7 @@ test -s references/role-catalog.md
 test -s references/workspace-structure.md
 test -s references/kb-policy.md
 test -s tests/pressure-scenarios.md
-rg -n "description: Use when|Output Language Contract|CEO Summary Readability Contract|Role Contribution Ledger|Subagent Execution Mode|Delivery Discipline Gates|Review Relevance Gate|Cross-Role Collaboration Loop|Role Selection Matrix|Workspace Modes|Pressure Scenarios" .
+rg -n "description: Use when|Output Language Contract|Reader-Facing Decision Artifact Contract|Role Contribution Ledger|Subagent Execution Mode|Delivery Discipline Gates|Review Relevance Gate|Cross-Role Collaboration Loop|Role Selection Matrix|Workspace Modes|Pressure Scenarios" .
 ```
 
 ## Publishing Workflow

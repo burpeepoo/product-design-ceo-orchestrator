@@ -112,7 +112,7 @@ Use one unified ledger for the run. Per-role files are optional supporting detai
 Owns orchestration, scope, priorities, tradeoffs, dependencies, and final synthesis.
 
 Inputs:
-- CEO brief
+- decision brief
 - all role outputs
 - user constraints
 

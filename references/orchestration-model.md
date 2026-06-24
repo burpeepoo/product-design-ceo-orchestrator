@@ -260,13 +260,15 @@ process_appendix:
 
 `reader_artifact` is written for a busy product or design lead. It should lead with the recommendation, then explain why, the plan or solution, risks, and next steps. Use natural headings in the user's language.
 
+Do not use CEO-branded titles such as "CEO结论", "CEO Summary", or "CEO Brief" as default reader-facing headings. CEO / Manager is an internal orchestration hat, not the default brand for the user's deliverable.
+
 `process_appendix` preserves the evidence trail: assumptions, role outputs, handoffs, review relevance, CEO adjudication, validation, risks, unresolved items, and output paths.
 
 Keep both layers in one artifact by default, with `reader_artifact` first. Split them into separate files only when the artifact is large, the format benefits from separation, or the user asks.
 
 Do not use internal process fields as the main reader-facing outline. Process fields belong in `process_appendix` unless the reader explicitly needs them to make the decision.
 
-## Required CEO Decisions
+## Required Orchestration Decisions
 
 Before executing, produce:
 - task classification
@@ -302,5 +304,7 @@ Keep the first response proportional to the task:
 - Complex: a concise plan with roles, phases, workspace mode, KB status, skill-routing approach, review depth, artifact formats, final artifact layers, and final integration criteria.
 
 Write the first response and all user-facing artifact content in the user's current language unless the user asks for another language.
+
+Before saving or returning durable artifact content, run a language consistency pass. Rewrite mixed-language reader-facing headings and prose into the user's language unless the text is a portable schema key, code identifier, quoted source text, product name, or file path.
 
 Do not turn the first response into a full final artifact unless the request is simple.

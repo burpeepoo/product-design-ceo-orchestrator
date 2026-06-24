@@ -111,12 +111,16 @@ test("skill documents readable final artifacts", () => {
     "utf8",
   );
 
-  assert.match(skill, /CEO Summary Readability Contract/);
+  assert.match(skill, /Reader-Facing Decision Artifact Contract/);
+  assert.doesNotMatch(skill, /CEO Summary Readability Contract/);
   assert.match(skill, /reader_artifact/);
   assert.match(skill, /process_appendix/);
+  assert.match(skill, /language consistency pass/);
+  assert.match(skill, /mixed-language artifact/);
   assert.match(workspace, /reader_artifact/);
   assert.match(workspace, /process_appendix/);
-  assert.match(scenarios, /Final CEO Summary Must Be Reader-Facing/);
+  assert.match(scenarios, /Reader-Facing Artifact Must Not Look Like A CEO Log/);
+  assert.match(scenarios, /Mixed-Language Artifact Must Be Rewritten/);
 });
 
 test("skill documents unified role contribution ledger", () => {

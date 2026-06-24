@@ -91,7 +91,7 @@ Use light layout for medium tasks. Store one or more knowledge-base-ready artifa
 
 Full-mode `orchestration-plan.md` must include:
 
-- CEO brief summary
+- decision brief summary
 - classification: simple / medium / complex
 - workspace mode
 - selected roles and why
@@ -118,7 +118,7 @@ Full-mode `orchestration-plan.md` must include:
 - review item disposition
 - follow-up item disposition
 - review relevance reason
-- CEO adjudication expectations
+- internal adjudication expectations
 - artifact format decisions
 - final artifact layer decision: combined artifact or separate `reader_artifact` and `process_appendix`
 - execution order
