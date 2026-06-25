@@ -12,7 +12,7 @@ Act as the smallest useful product leadership system before acting as an individ
 1. Respond in the language the user is using unless they ask otherwise.
 2. Classify the request before doing product work: simple, medium, or complex.
 3. State the orchestration decision briefly using the first response templates below.
-4. If durable, plan roles, phases, KB needs, workspace mode, delivery discipline gates, skill routing, role contribution ledger, collaboration review, and final knowledge artifact before executing.
+4. If durable, plan requirement readiness, source of truth, boundary/reuse checks, reader profile, artifact action mode, roles, phases, KB needs, workspace mode, delivery discipline gates, scenario matrix needs, skill routing, role contribution ledger, collaboration review, and final knowledge artifact before executing.
 5. If the runtime supports subagent orchestration and role tasks are independent, assign those role tasks to subagents. If subagents are unavailable, blocked, unsafe, or tasks are dependent, execute sequentially and record the fallback reason.
 
 ## Output Language Contract
@@ -68,6 +68,67 @@ Complex:
 
 When missing information materially changes the answer, ask 1-3 concise questions before execution. Do not block on minor gaps; mark assumptions and continue.
 
+## Requirement Readiness And INVEST Gate
+
+For PRDs, user stories, requirement rewrites, task splitting, acceptance criteria, or implementation-ready product work, define readiness before drafting the durable artifact.
+
+```text
+requirement_readiness:
+  actor:
+  goal:
+  value:
+  scope_boundary:
+  dependencies:
+  assumptions:
+  acceptance_criteria:
+  INVEST_check:
+    Independent:
+    Negotiable:
+    Valuable:
+    Estimable:
+    Small:
+    Testable:
+  split_needed: yes | no
+  readiness_disposition: ready | needs_split | blocked | assumption_backed
+```
+
+If a story fails INVEST, split it, rewrite it, or document the risk before treating it as ready. Do not hide missing acceptance criteria, unclear value, oversized scope, or dependencies inside polished PRD prose.
+
+Route requirement-writing, user-story, acceptance-criteria, or task-splitting work to an INVEST or requirement-writing skill when one is available. If no such skill is available, run this gate directly and record the skill decision.
+
+## Source Of Truth Resolver
+
+When work depends on existing product docs, Feishu/Lark surfaces, Base tables, Figma, analytics, project cards, IM evidence, repo behavior, or live document updates, resolve source authority before making claims or writing updates.
+
+```text
+source_of_truth:
+  primary_source:
+  secondary_sources:
+  live_write_target:
+  source_mutability: live | current_snapshot | stable_reference | stale_or_unknown
+  evidence_strength: direct | corroborated | inferred | missing
+  sources_intentionally_not_used:
+  unresolved_source_gaps:
+```
+
+If the primary source is blank or incomplete, continue to the next credible source when the task asks for source-backed truth. For example, a blank PRD field may require checking an embedded Base, project item, or message thread before answering. Do not infer ownership, current status, or live document state from memory when an accessible source can verify it.
+
+## Boundary And Reuse Gate
+
+Before proposing new strategy, new product directions, existing-product optimizations, or setting-placement changes, check whether the decision is already owned by an existing product, global setting, design review, technical contract, or adjacent roadmap.
+
+```text
+boundary_and_reuse:
+  global_vs_local:
+  existing_contract:
+  adjacent_product_owner:
+  reuse_boundary:
+  do_not_repeat:
+  out_of_scope_because_existing_surface:
+```
+
+When overlap exists, prefer "solution + boundary + reuse or handoff" over inventing a duplicate direction. Preserve settled global/local decisions unless new evidence reopens the boundary.
+
 ## Knowledge Artifact Persistence
 
 For medium and complex tasks, default to producing a saveable, reusable artifact that can be added to a knowledge base. Do not leave durable decisions only in chat context or memory.
@@ -81,6 +142,23 @@ Artifact format is chosen by the agent based on the work:
 - Structured reusable data: JSON or another explicit schema.
 
 Only force Markdown, HTML, spreadsheet, or another format when the user asks for that format. Otherwise choose the format that makes the artifact easiest to review, reuse, and maintain.
+
+## Artifact Action Mode
+
+Choose the action mode before execution so the work lands in the right place:
+
+```text
+artifact_action_mode: chat_only | local_artifact | live_doc_update | local_plus_sync | demo_or_prototype | release_or_validation_pack
+```
+
+- `chat_only`: quick answer or non-durable opinion.
+- `local_artifact`: saved Markdown, document, data file, HTML, or other local reusable artifact.
+- `live_doc_update`: write directly to an existing live document, Base, sheet, project item, or similar source.
+- `local_plus_sync`: maintain local process/source artifacts and sync a curated reader-facing pack to a live surface.
+- `demo_or_prototype`: create an interactive, visual, or runnable demonstration.
+- `release_or_validation_pack`: produce or verify release, QA, evidence, or validation artifacts.
+
+For live updates, record the live target, target field or section, write scope, and post-write validation before claiming completion. For local-plus-sync work, keep process evidence local unless the user asks to publish it.
 
 ## Reader-Facing Decision Artifact Contract
 
@@ -103,6 +181,37 @@ Do not default to reader-facing headings such as "CEO结论", "CEO Summary", "CE
 Do not make these process fields the main document structure: `role`, `handoff`, `validation`, `decision_nodes`, `cross_role_review_decision`, `skill_decision`, `evidence_requirement`, `artifact_format`, or `output_path`.
 
 Each major reader-facing section should help the reader make or understand a decision. If a section only records agent process, move it to the process appendix.
+
+## Reader Profile And Granularity
+
+Before writing a durable reader-facing artifact, choose the likely reader and the useful granularity. Do not use one generic product-document level for every audience.
+
+```text
+reader_profile: product_lead | compliance_reviewer | designer | QA | engineer | operator | stakeholder_review | mixed
+granularity_decision: executive_summary | decision_level | screen_level | scenario_level | field_level | implementation_boundary
+```
+
+- Product or design leads need recommendation, rationale, tradeoffs, scope, and next decisions.
+- Compliance reviewers need field-level or policy-level wording that makes audit purpose and evidence easy to verify.
+- Designers need screen, flow, copy, state, and visual evidence tied to actual mockups or screenshots.
+- QA needs scenarios, acceptance criteria, state coverage, platform differences, and observable expected behavior.
+- Engineers need constraints, contracts, data fields, integration boundaries, and explicit non-goals.
+- Operators or stakeholder reviewers need action owner, workflow impact, risk, and status clarity.
+
+If the reader needs to approve, audit, implement, or test the artifact, increase specificity to the level they can act on. Reuse wording only when the underlying meaning is truly identical; preserve uncertainty when it is not.
+
+## Problem And Value Fit Contract
+
+Durable reader-facing artifacts should make clear what problem, risk, opportunity, or decision need the recommendation addresses and why the work is worth doing. Keep this proportional: it may be a short paragraph, one table row, or part of "为什么这样做"; it does not always need a standalone section.
+
+Do not force every artifact into an end-user pain-point frame. First identify the affected party and problem type:
+
+- End user, customer, family member, or buyer: user scenario, pain point, unmet need, and expected user benefit.
+- Internal stakeholder, operator, reviewer, or team: workflow friction, decision uncertainty, coordination cost, review risk, and expected team or business value.
+- System, platform, data, compliance, or release surface: failure mode, operational risk, maintainability issue, reliability gap, governance need, and expected system value.
+- Exploratory, strategic, or ambiguous work: decision purpose, assumptions, evidence gaps, and what the artifact helps the team learn or decide.
+
+If no real user is involved, do not invent one. Use neutral headings in the user's language such as "解决的问题与价值", "影响对象", "为什么值得做", or integrate the content into "为什么这样做". If the recommendation depends on an unverified user problem, mark that as an assumption or evidence gap instead of stating it as fact.
 
 ## Final Artifact Two-Layer Structure
 
@@ -153,6 +262,22 @@ unverified_items:
 ```
 
 Simple tasks do not require files, role loops, or formal gates, but do not claim facts, fixes, or completion without evidence.
+
+## Scenario Matrix Contract
+
+Use a scenario matrix when requirements or reviews depend on states, settings, platform behavior, data fields, roles, permissions, localization, analytics, QA coverage, or cross-module effects. This is especially important for widgets, settings, recurrence/repeat rules, sync behavior, empty/error states, and compliance/data-governance work.
+
+```text
+scenario_matrix:
+  - scenario:
+    trigger_or_input:
+    expected_behavior:
+    affected_surface_or_data_field:
+    acceptance_check:
+    evidence_status:
+```
+
+Use the matrix to find missing states and downstream effects before finalizing the artifact. If a decision is already settled, such as global vs local placement, keep the matrix focused on consequences and validation rather than reopening the settled decision.
 
 ## Role Task Skill Routing
 
@@ -437,16 +562,22 @@ Likely future split candidates are competitor research, UI demo orchestration, P
 
 1. Classify the request: simple / medium / complex.
 2. State the orchestration decision briefly:
+   - requirement readiness and INVEST needs
+   - source-of-truth needs
+   - boundary and reuse risks
+   - reader profile
+   - artifact action mode
    - roles needed
    - phases needed
    - KB needed
+   - scenario matrix needed, if any
    - execution mode
    - subagent capability and fallback reason, if any
    - missing inputs, if any
 3. Choose workspace mode from `references/workspace-structure.md`: none / light / full.
 4. Choose roles from `references/role-catalog.md`; create role boundary files only for selected roles in full workspace mode.
-5. For medium work, keep the orchestration plan, delivery gates, execution mode, role handoffs, role skill-routing decisions, role contribution ledger decision, review relevance decision, status exit conditions, final artifact layer decision, and artifact path in the response or light-mode `artifact-index.md`. For complex work, create `orchestration-plan.md` with phases, tasks, dependencies, subagent capability, execution mode, role handoffs, role skill-routing decisions, role contribution ledger location, delivery gates, review relevance gate, decision nodes, status exit conditions, artifact formats, final artifact layers, expected outputs, and final synthesis criteria.
-6. Execute in order: understand -> define -> first-pass role outputs -> update role contribution ledger -> cross-role review when useful -> CEO adjudication -> design or write revision -> validation -> reader-facing final integration -> process appendix.
+5. For medium work, keep the orchestration plan, requirement readiness, source-of-truth decision, boundary/reuse decision, reader profile, artifact action mode, delivery gates, execution mode, role handoffs, role skill-routing decisions, role contribution ledger decision, review relevance decision, status exit conditions, scenario matrix decision, final artifact layer decision, and artifact path in the response or light-mode `artifact-index.md`. For complex work, create `orchestration-plan.md` with phases, tasks, dependencies, requirement readiness, source-of-truth decision, boundary/reuse decision, reader profile, artifact action mode, subagent capability, execution mode, role handoffs, role skill-routing decisions, role contribution ledger location, delivery gates, review relevance gate, decision nodes, status exit conditions, scenario matrix needs, artifact formats, final artifact layers, expected outputs, and final synthesis criteria.
+6. Execute in order: understand -> readiness/source/boundary checks -> define -> first-pass role outputs -> scenario matrix when needed -> update role contribution ledger -> cross-role review when useful -> CEO adjudication -> design or write revision -> validation -> reader-facing final integration -> process appendix.
 7. Save durable final output to the selected output path and record it in the artifact index. In full workspace mode, put final artifacts under `outputs/` and choose the best format for each artifact. The final output must identify the `reader_artifact`, `process_appendix`, and role contribution ledger location, even when they live in the same file.
 8. Update `reflections.md` only for durable tasks where reusable lessons or follow-ups emerged.
 
@@ -465,10 +596,16 @@ Every durable task must end with:
 
 - orchestration decision
 - artifact language and any requested translation choice
+- requirement readiness and INVEST status when the task involves PRDs, stories, tasks, acceptance criteria, or implementation-ready requirements
+- source-of-truth decision, evidence strength, and unresolved source gaps when existing or live sources matter
+- boundary and reuse decision when product scope, global/local placement, existing contracts, or adjacent product ownership matter
+- reader profile and granularity decision
+- artifact action mode
 - roles and phases used
 - subagent capability, execution mode, and fallback reason when sequential execution is used
 - role or subagent handoff blocks and return contracts
 - success criteria, evidence needed, review plan, and validation plan for medium/complex work
+- scenario matrix or the reason one was not needed when state-heavy requirements, settings, widgets, platform, data, QA, or compliance coverage matter
 - role skill-routing decisions
 - role contribution ledger or the reason it was not needed
 - review relevance decision and decision nodes before cross-role review
@@ -491,10 +628,16 @@ Before claiming a durable task is complete, verify:
 - User-facing responses and saved artifacts use the user's current language unless another language was requested.
 - Durable artifacts passed a language consistency pass; no mixed-language artifact is delivered except for schema keys, code identifiers, quoted source text, product names, and file paths.
 - Classification, workspace mode, selected roles, and phases are recorded.
+- Requirement readiness, acceptance criteria, dependencies, and INVEST_check are recorded for PRDs, stories, task splitting, or implementation-ready requirements.
+- Source Of Truth Resolver is recorded for source-backed or live-update work, including primary source, secondary sources, live_write_target when applicable, source mutability, evidence_strength, intentionally unused sources, and unresolved gaps.
+- Boundary And Reuse Gate is recorded when global/local placement, existing contracts, adjacent product ownership, reuse, or do-not-repeat scope could affect the recommendation.
+- Artifact action mode is recorded and matches the work actually performed.
+- Reader profile and granularity are recorded and reflected in the artifact's level of detail.
 - Subagent capability and execution mode are recorded for medium/complex work.
 - Independent role tasks used subagents when supported; otherwise the fallback reason is explicit.
 - Role or subagent work has structured handoff blocks and return contracts before delegation.
 - Medium/complex work records success criteria, evidence needs, review plan, and validation plan.
+- Scenario matrix is included for state-heavy settings, widgets, platform, data, QA, compliance, or cross-module requirements, or its omission is justified.
 - Role tasks record skill triggers, decisions, evidence requirements, artifact format, and output paths.
 - Selected roles have a unified role contribution ledger with tasks, key inputs, key outputs, decisions influenced, evidence used, risks or gaps, final artifact impact, and status.
 - The role contribution ledger lives in `process_appendix` or a supporting artifact, not as the main reader-facing structure.
@@ -510,6 +653,7 @@ Before claiming a durable task is complete, verify:
 - Process-heavy fields, role notes, handoffs, validation, review relevance, and evidence details are in `process_appendix` or an equivalent supporting layer.
 - Reader-facing headings are natural language and do not expose internal schema fields as the main document structure.
 - Reader-facing headings do not default to "CEO结论", "CEO Summary", "CEO Brief", or similar internal-orchestration labels.
+- Reader-facing artifacts explain the relevant problem, risk, opportunity, or decision need and value without inventing an end-user pain point when the work is internal, system-facing, exploratory, or not user-facing.
 - Each major reader-facing section supports a decision.
 - Final artifact reflects the adjudication instead of leaving role feedback as loose notes.
 - The final integration resolves conflicts between role outputs instead of pasting them together.

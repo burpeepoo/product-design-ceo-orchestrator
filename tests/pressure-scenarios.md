@@ -23,6 +23,12 @@ An agent using this skill should:
 - drive cross-role review from shared decision nodes rather than from role count alone
 - show CEO adjudication for accepted, rejected, or deferred role suggestions
 - keep final reader-facing artifacts decision-oriented, with process details separated from the main recommendation
+- explain the relevant problem and value for the affected party without forcing end-user pain framing
+- run requirement readiness and INVEST checks before PRD or task writing
+- resolve the source of truth, write target, and evidence strength before source-backed answers or live updates
+- check global/local, existing-contract, reuse, and do-not-repeat boundaries before proposing new product work
+- create a scenario matrix for state-heavy settings, widgets, data, platform, or QA-sensitive requirements
+- adapt artifact granularity to the reader profile and choose the correct artifact action mode
 - finish durable medium/complex work with a knowledge-base-ready artifact and explicit risks
 
 ## Scenario 1: Tiny Copy Fix Under Process Temptation
@@ -492,7 +498,152 @@ Expected behavior:
 Failure this prevents:
 - Producing a final reader artifact that reads like an agent process log or a CEO-labeled internal status memo instead of a product decision document.
 
-## Scenario 24: Role Contributions Need A Unified Ledger
+## Scenario 24: Problem And Value Should Fit The Artifact
+
+User request:
+
+> 帮我写一个内部字段治理方案，说明怎么让 reviewer 更容易判断数据储存目的。
+
+Pressures:
+- The artifact should make clear what problem and value the proposal addresses.
+- The work is internal governance and reviewer-facing, not user-facing.
+- The agent may invent an end-user pain point because product templates often ask for "user problems".
+
+Expected behavior:
+- Identify the affected party and problem type before writing the reader artifact.
+- Explain the reviewer, operations, compliance, or system value, such as reducing review ambiguity, improving auditability, or making field purpose easier to verify.
+- Do not force every artifact into an end-user pain-point frame.
+- If no real user is involved, do not invent one.
+- Use natural language headings such as "解决的问题与价值", "影响对象", or integrate the explanation into "为什么这样做".
+- Mark any unverified user-facing benefit as an assumption or evidence gap instead of stating it as fact.
+
+Failure this prevents:
+- A not user-facing internal or system proposal pretending to solve a made-up end-user pain point.
+- A recommendation that explains what to do but not why it matters or what problem it resolves.
+
+## Scenario 25: Requirement Readiness Must Precede PRD Writing
+
+User request:
+
+> 帮我把 Calendar widget 这个需求整理成 PRD，最好能直接给研发和 QA 用。
+
+Pressures:
+- The user asks for a PRD, so the agent may start drafting immediately.
+- The underlying story may still lack actor, value, scope, dependencies, or acceptance criteria.
+- The output will be used by engineering and QA, so unclear requirements create downstream rework.
+
+Expected behavior:
+- Before writing the PRD body, create a requirement readiness block with actor, goal, value, scope boundary, dependencies, assumptions, and acceptance criteria.
+- Run an `INVEST_check` and record Independent, Negotiable, Valuable, Estimable, Small, and Testable status.
+- If the story is too broad or not testable, split it or mark the risk before continuing.
+- Route requirement-writing tasks to a requirement or INVEST-specific skill when available.
+- Do not proceed as if a requirement is ready when acceptance criteria or dependencies are still missing.
+
+Failure this prevents:
+- Producing polished PRD prose for a requirement that is not independently deliverable, testable, or scoped.
+
+## Scenario 26: Source Of Truth Must Be Resolved Before Answering
+
+User request:
+
+> 这个 Rating 弹窗移动端需求是谁负责测试的？可以从飞书上找。
+
+Pressures:
+- The visible PRD may have an empty tester field.
+- The agent may answer from one document, memory, or a local note.
+- The correct answer may require embedded Base, project item, and IM evidence with different strength.
+
+Expected behavior:
+- Run a `Source Of Truth Resolver` before answering.
+- Record primary source, secondary sources, source mutability, evidence strength, and sources intentionally not used.
+- If the primary document is blank, continue to embedded Base, project item, and chat/history evidence when access allows.
+- Give concrete names only with evidence strength and uncertainty.
+- Do not infer an owner from a blank PRD field.
+
+Failure this prevents:
+- Confidently naming a tester from incomplete or stale evidence.
+
+## Scenario 27: Boundary And Reuse Must Be Checked Before New Strategy
+
+User request:
+
+> 给 Wellness 做几个新方向，儿童日常习惯和家庭健康都可以考虑。
+
+Pressures:
+- Strategy work invites new concepts and multiple directions.
+- Adjacent products may already own part of the problem space.
+- The agent may duplicate an existing product line because it sounds strategically attractive.
+
+Expected behavior:
+- Run a `Boundary And Reuse Gate` before final strategy.
+- Record `global_vs_local`, `existing_contract`, `adjacent_product_owner`, `reuse_boundary`, `do_not_repeat`, and out-of-scope rationale.
+- If an adjacent product already owns a direction, turn it into a reuse or handoff boundary instead of a duplicate strategy.
+- Keep active directions focused on genuinely unowned or under-served spaces.
+
+Failure this prevents:
+- Shipping a strategy that creates a second overlapping product concept instead of reusing the existing one.
+
+## Scenario 28: Scenario Matrix Required For State-Heavy Requirements
+
+User request:
+
+> Review the week-start setting requirement and tell me if any Sunday/Monday scenarios are missing.
+
+Pressures:
+- The UI placement may already be settled, tempting the agent to review only the visible screen.
+- The requirement affects repeat rules, date ranges, previews, data fields, multiple modules, and QA.
+- Missing state combinations are easier to miss in prose.
+
+Expected behavior:
+- Create a `scenario_matrix` with scenario, trigger/input, expected behavior, affected surface/data field, acceptance check, and evidence status.
+- Cover cross-module and downstream effects such as Calendar, Meals, Tasks, repeat preview, repeat-until, start/end dates, and stored fields when relevant.
+- Preserve already-settled global/local placement instead of reopening that decision without evidence.
+- Use the matrix to drive risks and follow-ups.
+
+Failure this prevents:
+- A prose review that misses important state, platform, or data-model cases.
+
+## Scenario 29: Reader Profile Controls Granularity
+
+User request:
+
+> 把这些字段的“数据储存目的”写得让合规审核的人能看懂。
+
+Pressures:
+- The agent may write broad domain-level summaries because many fields share a purpose.
+- Compliance reviewers need field-level meaning, not only product-module categories.
+- Overly generic wording can look complete while failing review usefulness.
+
+Expected behavior:
+- Set `reader_profile` to compliance reviewer or equivalent before writing.
+- Choose field-level granularity when the reader must audit, verify, or approve the content.
+- Reuse wording only when the underlying purpose is truly identical.
+- Preserve uncertainty for ambiguous fields instead of filling a confident guess.
+
+Failure this prevents:
+- A clean-looking artifact that is too coarse for the actual reviewer to use.
+
+## Scenario 30: Artifact Action Mode Must Match The Work
+
+User request:
+
+> 初步分析这些字段，然后直接写到文档里的“数据储存目的”列。
+
+Pressures:
+- The agent may stop at a chat summary or local artifact.
+- The work target is a live document/Base, and correctness requires post-write verification.
+- The agent may not distinguish between source lookup, live update, local KB artifact, and synced review pack.
+
+Expected behavior:
+- Set `artifact_action_mode` to `live_doc_update`.
+- Record the `live_write_target`, target field, write scope, and validation plan before updating.
+- After writing, verify blank count, failed rows, or other observable completion evidence.
+- If writing is blocked, record the blocker, fallback, and remaining manual step.
+
+Failure this prevents:
+- Delivering an analysis while leaving the requested live document unchanged.
+
+## Scenario 31: Role Contributions Need A Unified Ledger
 
 User request:
 
@@ -534,6 +685,12 @@ Before deploying edits to this skill, confirm:
 - Medium and complex tasks default to knowledge-base-ready artifacts without forcing Markdown.
 - Durable artifacts preserve the user's language unless another language is explicitly requested.
 - Role tasks include portable skill trigger routing and visible skill decisions.
+- Requirement writing or task splitting runs readiness and INVEST checks before implementation-ready artifacts.
+- Source-backed work resolves primary source, secondary sources, live write targets, evidence strength, and intentionally unused sources.
+- Product strategy and existing-product optimization check global/local, existing-contract, reuse, and do-not-repeat boundaries.
+- State-heavy settings, widgets, platform, data, or QA-sensitive requirements include a scenario matrix.
+- Reader profile is recorded and controls artifact granularity.
+- Artifact action mode is recorded as chat-only, local artifact, live document update, local plus sync, demo/prototype, or release/validation pack.
 - Selected role contributions are recorded in one unified ledger with final artifact impact.
 - Per-role files, when present, support the unified ledger instead of replacing it.
 - Independent role tasks use subagents when supported and fall back to sequential execution when not supported.
@@ -543,6 +700,7 @@ Before deploying edits to this skill, confirm:
 - Review items identify target decisions, challenge type, expected impact, and whether CEO adjudication is required.
 - Cross-role suggestions, concerns, questions, and conflicts return to CEO adjudication.
 - Final reader artifacts use a reader-facing body before process details.
+- Reader-facing artifacts explain problem and value fit without inventing end-user pain points for internal, system-facing, exploratory, or not user-facing work.
 - Process-heavy role, handoff, evidence, review, and validation details live in a process appendix or equivalent supporting layer.
 - Durable task completion is checked by the final validation checklist.
 - These pressure scenarios still map to explicit instructions in the skill.

@@ -40,6 +40,25 @@ In `kb/README.md`, record:
 - sources intentionally not used
 - open evidence gaps
 
+## Source Of Truth Resolver
+
+When the task depends on existing docs, live Feishu/Lark material, Base records, project cards, Figma, analytics, chat history, or repo behavior, resolve source authority before answering or writing.
+
+```text
+source_of_truth:
+  primary_source:
+  secondary_sources:
+  live_write_target:
+  source_mutability: live | current_snapshot | stable_reference | stale_or_unknown
+  evidence_strength: direct | corroborated | inferred | missing
+  sources_intentionally_not_used:
+  unresolved_source_gaps:
+```
+
+Use direct live sources when a field, owner, status, or document state may have changed. If the first source is blank, keep checking credible secondary sources when the user asked for source-backed truth. Do not infer from memory when an accessible source can verify the answer.
+
+For `live_doc_update` work, record the exact live_write_target, target table/view/field or document section, write scope, and post-write validation handle before editing.
+
 ## Use Evidence Carefully
 
 - Do not claim current market facts without browsing or user-provided sources.
@@ -47,6 +66,8 @@ In `kb/README.md`, record:
 - Distinguish facts, assumptions, and recommendations.
 - For screenshots/images, state what was visually inferred.
 - For data files, state metric definitions, timeframe, and uncertainty.
+- For source-backed ownership, status, or requirement answers, state evidence_strength and unresolved source gaps.
+- For live document writes, verify the target changed before claiming completion.
 
 ## Output Evidence
 
@@ -55,5 +76,5 @@ Final output should include:
 - "Used KB" list
 - "Assumptions" list
 - "Evidence gaps" list
+- source-of-truth decision when existing or live sources matter
 - "What to collect next" when relevant
-

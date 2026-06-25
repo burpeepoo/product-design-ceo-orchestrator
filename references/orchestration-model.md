@@ -262,6 +262,8 @@ process_appendix:
 
 Do not use CEO-branded titles such as "CEO结论", "CEO Summary", or "CEO Brief" as default reader-facing headings. CEO / Manager is an internal orchestration hat, not the default brand for the user's deliverable.
 
+Apply problem and value fit before finalizing the reader artifact. Explain the relevant problem, risk, opportunity, or decision need and why the recommendation matters, but do not force the artifact into an end-user pain-point frame when the work is internal, system-facing, exploratory, or not user-facing.
+
 `process_appendix` preserves the evidence trail: assumptions, role outputs, handoffs, review relevance, CEO adjudication, validation, risks, unresolved items, and output paths.
 
 Keep both layers in one artifact by default, with `reader_artifact` first. Split them into separate files only when the artifact is large, the format benefits from separation, or the user asks.

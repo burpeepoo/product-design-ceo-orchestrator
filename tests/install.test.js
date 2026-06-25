@@ -123,6 +123,70 @@ test("skill documents readable final artifacts", () => {
   assert.match(scenarios, /Mixed-Language Artifact Must Be Rewritten/);
 });
 
+test("skill documents problem and value fit without forcing user pain framing", () => {
+  const packageRoot = path.resolve(__dirname, "..");
+  const skill = fs.readFileSync(path.join(packageRoot, "SKILL.md"), "utf8");
+  const orchestration = fs.readFileSync(
+    path.join(packageRoot, "references", "orchestration-model.md"),
+    "utf8",
+  );
+  const scenarios = fs.readFileSync(
+    path.join(packageRoot, "tests", "pressure-scenarios.md"),
+    "utf8",
+  );
+
+  assert.match(skill, /Problem And Value Fit Contract/);
+  assert.match(skill, /affected party and problem type/);
+  assert.match(skill, /Do not force every artifact into an end-user pain-point frame/);
+  assert.match(skill, /If no real user is involved, do not invent one/);
+  assert.match(orchestration, /problem and value fit/);
+  assert.match(scenarios, /Problem And Value Should Fit The Artifact/);
+  assert.match(scenarios, /not user-facing/);
+});
+
+test("skill documents recent requirement-orchestration improvements", () => {
+  const packageRoot = path.resolve(__dirname, "..");
+  const skill = fs.readFileSync(path.join(packageRoot, "SKILL.md"), "utf8");
+  const kbPolicy = fs.readFileSync(
+    path.join(packageRoot, "references", "kb-policy.md"),
+    "utf8",
+  );
+  const delivery = fs.readFileSync(
+    path.join(packageRoot, "references", "delivery-discipline.md"),
+    "utf8",
+  );
+  const scenarios = fs.readFileSync(
+    path.join(packageRoot, "tests", "pressure-scenarios.md"),
+    "utf8",
+  );
+
+  assert.match(skill, /Requirement Readiness And INVEST Gate/);
+  assert.match(skill, /INVEST_check/);
+  assert.match(skill, /Source Of Truth Resolver/);
+  assert.match(skill, /source_of_truth/);
+  assert.match(skill, /Boundary And Reuse Gate/);
+  assert.match(skill, /reuse_boundary/);
+  assert.match(skill, /Scenario Matrix Contract/);
+  assert.match(skill, /scenario_matrix/);
+  assert.match(skill, /Reader Profile And Granularity/);
+  assert.match(skill, /reader_profile/);
+  assert.match(skill, /Artifact Action Mode/);
+  assert.match(skill, /artifact_action_mode/);
+
+  assert.match(kbPolicy, /Source Of Truth Resolver/);
+  assert.match(kbPolicy, /evidence_strength/);
+  assert.match(kbPolicy, /live_write_target/);
+  assert.match(delivery, /INVEST_check/);
+  assert.match(delivery, /scenario_matrix/);
+
+  assert.match(scenarios, /Requirement Readiness Must Precede PRD Writing/);
+  assert.match(scenarios, /Source Of Truth Must Be Resolved Before Answering/);
+  assert.match(scenarios, /Boundary And Reuse Must Be Checked Before New Strategy/);
+  assert.match(scenarios, /Scenario Matrix Required For State-Heavy Requirements/);
+  assert.match(scenarios, /Reader Profile Controls Granularity/);
+  assert.match(scenarios, /Artifact Action Mode Must Match The Work/);
+});
+
 test("skill documents unified role contribution ledger", () => {
   const packageRoot = path.resolve(__dirname, "..");
   const skill = fs.readFileSync(path.join(packageRoot, "SKILL.md"), "utf8");

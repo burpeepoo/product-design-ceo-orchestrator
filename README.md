@@ -239,6 +239,8 @@ Final reader-facing artifacts are written first for a busy product or design lea
 
 CEO / Manager remains an internal orchestration hat for role selection, conflict resolution, and final integration. The user's deliverable should not default to titles such as "CEO结论", "CEO Summary", or "CEO Brief" unless the user explicitly requests that framing or the literal audience is a CEO.
 
+Reader-facing artifacts also explain the relevant problem, risk, opportunity, or decision need and why the recommendation matters. This is not a forced user-pain template: for internal, system-facing, exploratory, or not user-facing work, the artifact should name the affected stakeholder, team, system, or decision surface instead of inventing an end user.
+
 ## Knowledge Artifacts
 
 Medium and complex tasks default to a saveable artifact suitable for a knowledge base. The artifact does not have to be Markdown:

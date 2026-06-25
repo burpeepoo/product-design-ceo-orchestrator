@@ -6,7 +6,7 @@ Use these gates for medium and complex product-design work. They protect correct
 
 | Gate | When | Required record |
 |---|---|---|
-| Entry Gate | Before durable work starts | `success_criteria`, `evidence_needed`, `review_plan`, `validation_plan` |
+| Entry Gate | Before durable work starts | `success_criteria`, `evidence_needed`, `review_plan`, `validation_plan`, readiness/source/boundary needs |
 | Evidence Gate | Before making claims or recommendations | sources used, assumptions, evidence gaps |
 | Review Gate | After first-pass role outputs | cross-role suggestions, concerns, questions, conflicts |
 | Completion Gate | Before claiming completion | `validation_performed`, `evidence_collected`, `known_risks`, `unverified_items` |
@@ -26,6 +26,36 @@ validation_plan:
 
 Keep these short. The point is to make correctness checkable before writing the artifact.
 
+For PRDs, stories, task splitting, acceptance criteria, or implementation-ready requirements, also define:
+
+```text
+requirement_readiness:
+  actor:
+  goal:
+  value:
+  scope_boundary:
+  dependencies:
+  assumptions:
+  acceptance_criteria:
+  INVEST_check:
+  split_needed:
+  readiness_disposition:
+```
+
+If acceptance criteria, dependencies, or INVEST_check fail, split, rewrite, or document the risk before treating the requirement as ready.
+
+For product strategy, existing-product optimization, setting placement, or adjacent product surfaces, also define boundary and reuse status:
+
+```text
+boundary_and_reuse:
+  global_vs_local:
+  existing_contract:
+  adjacent_product_owner:
+  reuse_boundary:
+  do_not_repeat:
+  out_of_scope_because_existing_surface:
+```
+
 ## Evidence Gate
 
 Use evidence appropriate to the claim:
@@ -36,6 +66,35 @@ Use evidence appropriate to the claim:
 - User or data claims: use research, interviews, analytics, experiments, or mark as assumptions.
 
 Do not convert missing evidence into confident recommendations. Record the gap and continue only when the recommendation can still be useful with that limitation.
+
+Resolve source authority for source-backed or live-update work:
+
+```text
+source_of_truth:
+  primary_source:
+  secondary_sources:
+  live_write_target:
+  source_mutability:
+  evidence_strength:
+  sources_intentionally_not_used:
+  unresolved_source_gaps:
+```
+
+## Scenario Matrix
+
+Use a scenario_matrix when state, settings, platform behavior, data fields, roles, permissions, localization, analytics, QA, compliance, or cross-module effects could change the recommendation.
+
+```text
+scenario_matrix:
+  - scenario:
+    trigger_or_input:
+    expected_behavior:
+    affected_surface_or_data_field:
+    acceptance_check:
+    evidence_status:
+```
+
+The matrix should feed acceptance criteria, risk, QA, and follow-up decisions. If omitted for a state-heavy requirement, state why.
 
 ## Review Gate
 
@@ -85,6 +144,10 @@ Keep completion evidence in the process appendix or supporting layer unless it i
 Stop and tighten the work when any of these appear:
 
 - "This should work" without validation.
+- PRD or task artifacts written before acceptance criteria and INVEST_check are clear.
+- Source-backed answers that skip primary source, secondary sources, live_write_target, or evidence_strength.
+- New strategy that ignores global/local, existing-contract, reuse_boundary, or do_not_repeat checks.
+- State-heavy requirements without a scenario_matrix or explicit omission reason.
 - Current market, competitor, user, or technical claims without evidence or assumptions.
 - Role outputs pasted together without CEO adjudication.
 - Selected role work has no unified contribution ledger or no stated final artifact impact.
